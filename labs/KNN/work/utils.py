@@ -20,7 +20,6 @@ def f1_score(real_labels, predicted_labels):
 
 class Distances:
     @staticmethod
-    # TODO
     def minkowski_distance(point1, point2):
         """
         Minkowski distance is the generalized version of Euclidean Distance
@@ -31,17 +30,17 @@ class Distances:
         :param point2: List[float]
         :return: float
         """
-        raise NotImplementedError
+
+        return sum([(p1 - p2)**3 for p1, p2 in zip(point1, point2)])**(1/3)
 
     @staticmethod
-    # TODO
     def euclidean_distance(point1, point2):
         """
         :param point1: List[float]
         :param point2: List[float]
         :return: float
         """
-        raise NotImplementedError
+        return sum([(p1 - p2)**2 for p1, p2 in zip(point1, point2)])**(1/2)
 
     @staticmethod
     # TODO
