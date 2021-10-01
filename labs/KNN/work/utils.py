@@ -14,8 +14,9 @@ def f1_score(real_labels, predicted_labels):
     :param predicted_labels: List[int]
     :return: float
     """
-    assert len(real_labels) == len(predicted_labels)
-    raise NotImplementedError
+    tp = [1 if r == p else 0 for r, p in zip(real_labels, predicted_labels)]
+
+    return tp/(tp + 0.5*(len(real_labels)-tp))
 
 
 class Distances:
@@ -43,7 +44,6 @@ class Distances:
         return sum([(p1 - p2)**2 for p1, p2 in zip(point1, point2)])**(1/2)
 
     @staticmethod
-    # TODO
     def cosine_similarity_distance(point1, point2):
         """
        :param point1: List[float]
