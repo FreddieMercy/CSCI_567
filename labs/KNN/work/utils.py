@@ -50,7 +50,7 @@ class Distances:
        :param point2: List[float]
        :return: float
        """
-        raise NotImplementedError
+        return np.dot(point1, point2) / (np.sqrt(np.dot(point1, point1)) * np.sqrt(np.dot(point2, point2)))
 
 
 
