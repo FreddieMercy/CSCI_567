@@ -112,3 +112,5 @@ class test_KNN_Tests(TestUtilities):
         for p1, p2 in zip(point1, point2):
             self.assertEqual(self.legacy_euclidean_distance(p1, p2),
                              Distances.euclidean_distance(p1, p2))
+
+
