@@ -20,7 +20,6 @@ def f1_score(real_labels, predicted_labels):
 
 class Distances:
     @staticmethod
-    # TODO
     def minkowski_distance(point1, point2):
         """
         Minkowski distance is the generalized version of Euclidean Distance
