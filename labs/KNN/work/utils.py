@@ -5,8 +5,6 @@ from knn import KNN
 # DO NOT MODIFY CODES ABOVE 
 ############################################################################
 
-
-# TODO: implement F1 score
 def f1_score(real_labels, predicted_labels):
     """
     Information on F1 score - https://en.wikipedia.org/wiki/F1_score
