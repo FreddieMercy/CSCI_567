@@ -31,7 +31,8 @@ class Distances:
         :param point2: List[float]
         :return: float
         """
-        raise NotImplementedError
+
+        return sum([(p1 - p2)**3 for p1, p2 in zip(point1, point2)])**(1/3)
 
     @staticmethod
     # TODO
