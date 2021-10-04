@@ -195,7 +195,7 @@ class test_KNN_Tests(TestUtilities):
     def test_Knn_NormalizationScaler_Test(self):
 
         features = [[3, 4], [1, -1], [0, 0]]
-        expect = [[0.6, 0.8], [0.707107, -0.707107], [0, 0]]
+        expect = [[0.6, 0.8], [0.7071067811865475, -0.7071067811865475], [0, 0]]
 
         scaler = NormalizationScaler()
 
