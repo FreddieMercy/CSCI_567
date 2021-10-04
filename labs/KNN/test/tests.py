@@ -1,6 +1,9 @@
 from unittest import TestCase
+
+from work.knn import KNN
 from work.utils import Distances
 
+import numpy as np
 
 class TestUtilities(TestCase):
     def legacy_minkowski_distance(self, point1, point2):
@@ -130,7 +133,6 @@ class test_KNN_Tests(TestUtilities):
             self.assertEqual(1, Distances.cosine_similarity_distance(p1, p2))
             self.assertEqual(1, Distances.cosine_similarity_distance(p2, p1))
 
-
     def test_cosine_similarity_distance_TestZeroWithOthers(self):
 
         point1 = [[67.0, 1.0, 4.0, 100.0, 299.0, 0.0, 2.0, 125.0, 1.0, 0.9, 2.0, 2.0, 3.0, 1]]
@@ -145,3 +147,12 @@ class test_KNN_Tests(TestUtilities):
                              Distances.cosine_similarity_distance(p1, p2))
             self.assertEqual(Distances.minkowski_distance(p1, p2),
                              Distances.cosine_similarity_distance(p1, p2))
+
+    def test_Knn_get_k_neighbors_Test(self):
+
+        knn = KNN(4, Distances.euclidean_distance)
+        training = [[i] for i in range(10, 0, -1)]
+
+        knn.train(training, np.zeros(10))
+
+        self.assertEqual(knn.get_k_neighbors([0]), [([1], 1.0), ([2], 2.0), ([3], 3.0), ([4], 4.0)])
