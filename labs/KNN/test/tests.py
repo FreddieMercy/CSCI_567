@@ -13,8 +13,7 @@ class TestUtilities(TestCase):
             tmp = point1[i] - point2[i]
             tmp **= 3
             sum += tmp
-        sum **= (1 / 3)
-        return sum
+        return np.cbrt(sum)
 
     def legacy_euclidean_distance(self, point1, point2):
         sum = 0
@@ -22,8 +21,7 @@ class TestUtilities(TestCase):
             tmp = point1[i] - point2[i]
             tmp **= 2
             sum += tmp
-        sum **= (1 / 2)
-        return sum
+        return np.sqrt(sum)
 
     def AssertLists(self, left, right):
         self.assertIsNotNone(left)
