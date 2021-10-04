@@ -1,6 +1,7 @@
 import numpy as np
 from knn import KNN
 
+
 ############################################################################
 # DO NOT MODIFY CODES ABOVE 
 ############################################################################
@@ -14,7 +15,7 @@ def f1_score(real_labels, predicted_labels):
     """
     tp = [1 if r == p else 0 for r, p in zip(real_labels, predicted_labels)]
 
-    return tp/(tp + 0.5*(len(real_labels)-tp))
+    return tp / (tp + 0.5 * (len(real_labels) - tp))
 
 
 class Distances:
@@ -30,7 +31,7 @@ class Distances:
         :return: float
         """
 
-        return sum([(p1 - p2)**3 for p1, p2 in zip(point1, point2)])**(1/3)
+        return sum([(p1 - p2) ** 3 for p1, p2 in zip(point1, point2)]) ** (1 / 3)
 
     @staticmethod
     def euclidean_distance(point1, point2):
@@ -39,7 +40,7 @@ class Distances:
         :param point2: List[float]
         :return: float
         """
-        return sum([(p1 - p2)**2 for p1, p2 in zip(point1, point2)])**(1/2)
+        return sum([(p1 - p2) ** 2 for p1, p2 in zip(point1, point2)]) ** (1 / 2)
 
     @staticmethod
     def cosine_similarity_distance(point1, point2):
@@ -54,7 +55,6 @@ class Distances:
         if x1 == 0 or x2 == 0:
             return 1
         return 1 - (np.dot(point1, point2) / (x1 * x2))
-
 
 
 class HyperparameterTuner:
@@ -84,7 +84,7 @@ class HyperparameterTuner:
 		(this will also be the insertion order in "distance_funcs", to make things easier).
         For the same distance function, further break tie by prioritizing a smaller k.
         """
-        
+
         # You need to assign the final values to these variables
         self.best_k = None
         self.best_distance_function = None
@@ -108,7 +108,7 @@ class HyperparameterTuner:
         NOTE: When there is a tie, choose the model based on the following priorities:
         First check scaler, prioritizing "min_max_scale" over "normalize" (which will also be the insertion order of scaling_classes). Then follow the same rule as in "tuning_without_scaling".
         """
-        
+
         # You need to assign the final values to these variables
         self.best_k = None
         self.best_distance_function = None
@@ -121,8 +121,7 @@ class NormalizationScaler:
     def __init__(self):
         pass
 
-    # TODO: normalize data
-    def __call__(self, features):
+    def __call__(self, feature):
         """
         Normalize features for every sample
 
@@ -133,15 +132,26 @@ class NormalizationScaler:
         :param features: List[List[float]]
         :return: List[List[float]]
         """
-        raise NotImplementedError
+
+        features = [list(f) for f in feature]
+
+        for i in range(len(features)):
+
+            deno = np.sqrt(np.dot(features[i], features[i]))
+
+            if deno == 0:
+                continue
+
+            features[i] = [p / deno for p in features[i]]
+
+        return features
 
 
 class MinMaxScaler:
     def __init__(self):
         pass
 
-    # TODO: min-max normalize data
-    def __call__(self, features):
+    def __call__(self, feature):
         """
 		For each feature, normalize it linearly so that its value is between 0 and 1 across all samples.
         For example, if the input features are [[2, -1], [-1, 5], [0, 0]],
@@ -156,4 +166,19 @@ class MinMaxScaler:
         :param features: List[List[float]]
         :return: List[List[float]]
         """
-        raise NotImplementedError
+
+        features = [list(f) for f in feature]
+
+        globalMini = [min(features[:][i]) for i in range(len(features[0]))]
+        globalMaxi = [max(features[:][i]) for i in range(len(features[0]))]
+
+        for i in range(len(features)):
+            for j in range(len(features[0])):
+
+                if globalMaxi[j] == globalMini[j]:
+                    features[i][j] = 0
+                    continue
+
+                features[i][j] = (features[i][j] - globalMini[j]) / (globalMaxi[j] - globalMini[j])
+
+        return features

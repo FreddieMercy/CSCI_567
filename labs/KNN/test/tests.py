@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from work.knn import KNN
-from work.utils import Distances
+from work.utils import Distances, NormalizationScaler, MinMaxScaler
 
 import numpy as np
 
@@ -191,3 +191,22 @@ class test_KNN_Tests(TestUtilities):
         knn.train(feature, label)
 
         self.assertEqual(knn.predict(feature), label)
+
+    def test_Knn_NormalizationScaler_Test(self):
+
+        features = [[3, 4], [1, -1], [0, 0]]
+        expect = [[0.6, 0.8], [0.7071067811865475, -0.7071067811865475], [0, 0]]
+
+        scaler = NormalizationScaler()
+
+        self.assertEqual(scaler(features), expect)
+
+
+    def test_Knn_MinMaxScaler_Test(self):
+
+        features = [[2, -1], [-1, 5], [0, 0]]
+        expect = [[1.0, 0.0], [0.0, 1.0], [0.3333333333333333, 0.16666666666666666]]
+
+        scaler = MinMaxScaler()
+
+        self.assertEqual(scaler(features), expect)
