@@ -65,7 +65,7 @@ def regularized_linear_regression(X, y, lambd):
   #####################################################
 
     x2 = np.dot(np.transpose(X), X)
-    w = np.dot(np.dot(np.linalg.inv(x2 + lambd * np.identity(len(x2))), np.transpose(X)), y)
+    w = np.dot(np.dot(np.linalg.inv(np.add(x2, lambd * np.identity(len(x2)))), np.transpose(X)), y)
 
     return w
 
