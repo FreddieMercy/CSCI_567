@@ -43,7 +43,7 @@ def linear_regression_noreg(X, y):
   # TODO  : Add tests
   #####################################################
 
-  w = np.dot(np.dot(np.linalg.inv(np.dot(X, X)), X), y)
+  w = np.dot(np.dot(np.linalg.inv(np.dot(np.transpose(X), X)), np.transpose(X)), y)
   
   return w
 
@@ -62,8 +62,10 @@ def regularized_linear_regression(X, y, lambd):
   #####################################################
   # TODO 4: Fill in your code here
   # TODO  : Add tests
-  #####################################################		
-    w = np.dot(np.dot(np.linalg.inv(np.dot(X, X) + lambd * np.identity(len(X))), X), y)
+  #####################################################
+
+    x2 = np.dot(np.transpose(X), X)
+    w = np.dot(np.dot(np.linalg.inv(x2 + lambd * np.identity(len(x2))), np.transpose(X)), y)
 
     return w
 
