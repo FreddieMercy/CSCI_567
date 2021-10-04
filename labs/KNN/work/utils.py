@@ -151,7 +151,7 @@ class MinMaxScaler:
         pass
 
     # TODO: min-max normalize data
-    def __call__(self, features):
+    def __call__(self, feature):
         """
 		For each feature, normalize it linearly so that its value is between 0 and 1 across all samples.
         For example, if the input features are [[2, -1], [-1, 5], [0, 0]],
@@ -166,4 +166,27 @@ class MinMaxScaler:
         :param features: List[List[float]]
         :return: List[List[float]]
         """
-        raise NotImplementedError
+
+        features = feature[:]
+
+        globalMini = None
+        globalMaxi = None
+
+        for f in features:
+            if globalMaxi is None or globalMini is None:
+                globalMaxi = max(f)
+                globalMini = min(f)
+                continue
+
+            globalMaxi = max(np.append(f, globalMaxi))
+            globalMini = min(np.append(f, globalMini))
+
+        for i in range(len(features)):
+
+            if globalMaxi == globalMini:
+                features[i] = np.zeros(len(features[i])).tolist()
+                continue
+
+            features[i] = [(p - globalMini)/(globalMaxi-globalMini) for p in features[i]]
+
+        return features
