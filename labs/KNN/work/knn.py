@@ -6,6 +6,8 @@ from collections import Counter
 ############################################################################
 
 class KNN:
+    _traningSetWithLabel = []
+
     def __init__(self, k, distance_function):
         """
         :param k: int
@@ -14,7 +16,6 @@ class KNN:
         self.k = k
         self.distance_function = distance_function
 
-    # TODO: save features and lable to self
     def train(self, features, labels):
         """
         In this function, features is simply training data which is a 2D list with float values.
@@ -27,9 +28,12 @@ class KNN:
         :param features: List[List[float]]
         :param labels: List[int]
         """
-        raise NotImplementedError
+        traningSet = features[:]
+        traningLabel = labels[:]
 
-    # TODO: find KNN of one point
+        for i in range(len(traningSet)):
+            self._traningSetWithLabel.append((traningSet[i], traningLabel[i]))
+
     def get_k_neighbors(self, point):
         """
         This function takes one single data point and finds the k nearest neighbours in the training set.
@@ -38,9 +42,14 @@ class KNN:
         :param point: List[float]
         :return:  List[int]
         """
-        raise NotImplementedError
-		
-	# TODO: predict labels of a list of points
+
+        buffer = [(self._traningSetWithLabel[i][:],
+                   self.distance_function(point, self._traningSetWithLabel[i][0]))
+                  for i in range(len(self._traningSetWithLabel))]
+        buffer.sort(key=lambda distance : distance[-1])
+
+        return buffer[:self.k]
+
     def predict(self, features):
         """
         This function takes 2D list of test data points, similar to those from train function. Here, you need to process
@@ -51,8 +60,23 @@ class KNN:
         :param features: List[List[float]]
         :return: List[int]
         """
-        raise NotImplementedError	
 
+        predictResult = []
+
+        for point in features:
+            result = {}
+            anslabel = None
+            ansCount = None
+            for p in self.get_k_neighbors(point):
+                label = p[0][1]
+                result[label] = result.get(label, 0) + 1
+                if anslabel is None or ansCount < result[label]:
+                    anslabel = label
+                    ansCount = result[label]
+
+            predictResult.append(anslabel)
+
+        return predictResult
 
 if __name__ == '__main__':
     print(np.__version__)

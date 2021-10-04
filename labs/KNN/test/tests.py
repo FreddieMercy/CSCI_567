@@ -1,5 +1,9 @@
 from unittest import TestCase
+
+from work.knn import KNN
 from work.utils import Distances
+
+import numpy as np
 
 
 class TestUtilities(TestCase):
@@ -130,7 +134,6 @@ class test_KNN_Tests(TestUtilities):
             self.assertEqual(1, Distances.cosine_similarity_distance(p1, p2))
             self.assertEqual(1, Distances.cosine_similarity_distance(p2, p1))
 
-
     def test_cosine_similarity_distance_TestZeroWithOthers(self):
 
         point1 = [[67.0, 1.0, 4.0, 100.0, 299.0, 0.0, 2.0, 125.0, 1.0, 0.9, 2.0, 2.0, 3.0, 1]]
@@ -145,3 +148,46 @@ class test_KNN_Tests(TestUtilities):
                              Distances.cosine_similarity_distance(p1, p2))
             self.assertEqual(Distances.minkowski_distance(p1, p2),
                              Distances.cosine_similarity_distance(p1, p2))
+
+    def test_Knn_get_k_neighbors_Test(self):
+
+        knn = KNN(4, Distances.euclidean_distance)
+        training = [[i] for i in range(10, 0, -1)]
+
+        knn.train(training, np.zeros(10))
+
+        result = [(p[0][0], p[1]) for p in knn.get_k_neighbors([0])]
+        self.assertEqual(result, [([1], 1.0), ([2], 2.0), ([3], 3.0), ([4], 4.0)])
+
+    def test_Knn_get_k_neighbors_predict_Test(self):
+
+        feature = [
+            [67.0, 1.0, 4.0, 100.0, 299.0, 0.0, 2.0, 125.0, 1.0, 0.9, 2.0, 2.0, 3.0],
+            [69.0, 1.0, 1.0, 160.0, 234.0, 1.0, 2.0, 131.0, 0.0, 0.1, 2.0, 1.0, 3.0],
+            [45.0, 0.0, 4.0, 138.0, 236.0, 0.0, 2.0, 152.0, 1.0, 0.2, 2.0, 0.0, 3.0],
+            [50.0, 0.0, 2.0, 120.0, 244.0, 0.0, 0.0, 162.0, 0.0, 1.1, 1.0, 0.0, 3.0],
+            [59.0, 1.0, 1.0, 160.0, 273.0, 0.0, 2.0, 125.0, 0.0, 0.0, 1.0, 0.0, 3.0],
+            [50.0, 0.0, 4.0, 110.0, 254.0, 0.0, 2.0, 159.0, 0.0, 0.0, 1.0, 0.0, 3.0],
+            [64.0, 0.0, 4.0, 180.0, 325.0, 0.0, 0.0, 154.0, 1.0, 0.0, 1.0, 0.0, 3.0],
+            [57.0, 1.0, 3.0, 150.0, 126.0, 1.0, 0.0, 173.0, 0.0, 0.2, 1.0, 1.0, 7.0],
+            [64.0, 0.0, 3.0, 140.0, 313.0, 0.0, 0.0, 133.0, 0.0, 0.2, 1.0, 0.0, 7.0],
+            [43.0, 1.0, 4.0, 110.0, 211.0, 0.0, 0.0, 161.0, 0.0, 0.0, 1.0, 0.0, 7.0],
+            [45.0, 1.0, 4.0, 142.0, 309.0, 0.0, 2.0, 147.0, 1.0, 0.0, 2.0, 3.0, 7.0],
+            [58.0, 1.0, 4.0, 128.0, 259.0, 0.0, 2.0, 130.0, 1.0, 3.0, 2.0, 2.0, 7.0],
+            [50.0, 1.0, 4.0, 144.0, 200.0, 0.0, 2.0, 126.0, 1.0, 0.9, 2.0, 0.0, 7.0],
+            [55.0, 1.0, 2.0, 130.0, 262.0, 0.0, 0.0, 155.0, 0.0, 0.0, 1.0, 0.0, 3.0],
+            [62.0, 0.0, 4.0, 150.0, 244.0, 0.0, 0.0, 154.0, 1.0, 1.4, 2.0, 0.0, 3.0],
+            [37.0, 0.0, 3.0, 120.0, 215.0, 0.0, 0.0, 170.0, 0.0, 0.0, 1.0, 0.0, 3.0],
+            [38.0, 1.0, 1.0, 120.0, 231.0, 0.0, 0.0, 182.0, 1.0, 3.8, 2.0, 0.0, 7.0],
+            [41.0, 1.0, 3.0, 130.0, 214.0, 0.0, 2.0, 168.0, 0.0, 2.0, 2.0, 0.0, 3.0],
+            [66.0, 0.0, 4.0, 178.0, 228.0, 1.0, 0.0, 165.0, 1.0, 1.0, 2.0, 2.0, 7.0],
+            [52.0, 1.0, 4.0, 112.0, 230.0, 0.0, 0.0, 160.0, 0.0, 0.0, 1.0, 1.0, 3.0]
+        ]
+
+        label = [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1]
+
+        knn = KNN(2, Distances.euclidean_distance)
+
+        knn.train(feature, label)
+
+        self.assertEqual(knn.predict(feature), label)
