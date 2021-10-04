@@ -133,7 +133,16 @@ class NormalizationScaler:
         :param features: List[List[float]]
         :return: List[List[float]]
         """
-        raise NotImplementedError
+
+        for i in range(len(features)):
+
+            deno = np.sqrt(np.dot(features[i], features[i]))
+
+            if deno == 0:
+                continue
+
+            features[i] = [p / deno for p in features[i]]
+
 
 
 class MinMaxScaler:
