@@ -18,9 +18,14 @@ def mean_square_error(w, X, y):
     - err: the mean square error
     """
     #####################################################
-    # TODO 1: Fill in your code here                    #
+    # TODO 1: Fill in your code here
+    # TODO  : add tests
     #####################################################
-    err = None
+    
+    N = len(y)
+    
+    err = sum([(np.dot(w, X[n]) - y[n])**2  for n in range(N)])/N
+   
     return err
 
 ###### Part 1.2 ######
