@@ -32,7 +32,6 @@ class KNN:
         self._traningSet = features[:]
         self._traningLabel = labels[:]
 
-    # TODO: find KNN of one point
     def get_k_neighbors(self, point):
         """
         This function takes one single data point and finds the k nearest neighbours in the training set.
@@ -41,7 +40,9 @@ class KNN:
         :param point: List[float]
         :return:  List[int]
         """
-        raise NotImplementedError
+
+        buffer = [(self._traningSet[i][:], self.distance_function(point, self._traningSet[i])) for i in range(len(self._traningSet))]
+        return buffer.sort(key=lambda distance : distance[-1])[:self.k]
 		
 	# TODO: predict labels of a list of points
     def predict(self, features):
