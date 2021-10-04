@@ -133,7 +133,7 @@ class NormalizationScaler:
         :return: List[List[float]]
         """
 
-        features = list(feature)
+        features = [list(f) for f in feature]
 
         for i in range(len(features)):
 
@@ -167,7 +167,7 @@ class MinMaxScaler:
         :return: List[List[float]]
         """
 
-        features = list(feature)
+        features = [list(f) for f in feature]
 
         globalMini = [min(features[:][i]) for i in range(len(features[0]))]
         globalMaxi = [max(features[:][i]) for i in range(len(features[0]))]
