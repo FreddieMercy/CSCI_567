@@ -42,7 +42,9 @@ class KNN:
         """
 
         buffer = [(self._traningSet[i][:], self.distance_function(point, self._traningSet[i])) for i in range(len(self._traningSet))]
-        return buffer.sort(key=lambda distance : distance[-1])[:self.k]
+        buffer.sort(key=lambda distance : distance[-1])
+
+        return buffer[:self.k]
 		
 	# TODO: predict labels of a list of points
     def predict(self, features):
