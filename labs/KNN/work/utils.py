@@ -150,7 +150,6 @@ class MinMaxScaler:
     def __init__(self):
         pass
 
-    # TODO: min-max normalize data
     def __call__(self, feature):
         """
 		For each feature, normalize it linearly so that its value is between 0 and 1 across all samples.
