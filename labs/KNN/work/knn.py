@@ -61,7 +61,7 @@ class KNN:
         :return: List[int]
         """
 
-        predict = []
+        predictResult = []
 
         for point in features:
             result = {}
@@ -74,9 +74,9 @@ class KNN:
                     anslabel = label
                     ansCount = result[label]
 
-            predict.append(anslabel)
+            predictResult.append(anslabel)
 
-        return predict
+        return predictResult
 
 if __name__ == '__main__':
     print(np.__version__)
