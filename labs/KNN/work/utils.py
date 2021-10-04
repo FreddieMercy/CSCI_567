@@ -63,6 +63,7 @@ class HyperparameterTuner:
         self.best_distance_function = None
         self.best_scaler = None
         self.best_model = None
+        self._f_score = None
 
     def tuning_without_scaling(self, distance_funcs, x_train, y_train, x_val, y_val):
         """
@@ -84,38 +85,19 @@ class HyperparameterTuner:
         For the same distance function, further break tie by prioritizing a smaller k.
         """
 
-        f_score = None
-
         for k in range(1, len(x_train)):
-            knn_euclidean = KNN(k, Distances.euclidean_distance)
-            knn_Minkowski = KNN(k, Distances.minkowski_distance)
-            knn_cosine_dist = KNN(k, Distances.cosine_similarity_distance)
+            for key in distance_funcs:
+                knn = KNN(k, distance_funcs[key])
 
-            knn_euclidean.train(x_train, y_train)
-            knn_Minkowski.train(x_train, y_train)
-            knn_cosine_dist.train(x_train, y_train)
+                knn.train(x_train, y_train)
 
-            f_euclidean = f1_score(y_val, knn_euclidean.predict(x_val))
-            f_Minkowski = f1_score(y_val, knn_Minkowski.predict(x_val))
-            f_cosine_dist = f1_score(y_val, knn_cosine_dist.predict(x_val))
+                new_f_score = f1_score(y_val, knn.predict(x_val))
 
-            if f_score is None or f_euclidean > f_score:
-                self.best_k = k
-                self.best_distance_function = Distances.euclidean_distance
-                self.best_model = knn_euclidean
-                f_score = f_euclidean
-
-            if f_Minkowski > f_score:
-                self.best_k = k
-                self.best_distance_function = Distances.minkowski_distance
-                self.best_model = knn_Minkowski
-                f_score = f_Minkowski
-
-            if f_cosine_dist > f_score:
-                self.best_k = k
-                self.best_distance_function = Distances.cosine_similarity_distance
-                self.best_model = knn_cosine_dist
-                f_score = f_cosine_dist
+                if self._f_score is None or new_f_score > self._f_score:
+                    self.best_k = k
+                    self.best_distance_function = distance_funcs[key]
+                    self.best_model = knn
+                    self._f_score = new_f_score
 
     # TODO: find parameters with the best f1 score on validation dataset, with normalized data
     def tuning_with_scaling(self, distance_funcs, scaling_classes, x_train, y_train, x_val, y_val):
