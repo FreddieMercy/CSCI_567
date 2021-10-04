@@ -13,7 +13,7 @@ def f1_score(real_labels, predicted_labels):
     :param predicted_labels: List[int]
     :return: float
     """
-    tp = [1 if r == p else 0 for r, p in zip(real_labels, predicted_labels)]
+    tp = sum([1 if r == p else 0 for r, p in zip(real_labels, predicted_labels)])
 
     return tp / (tp + 0.5 * (len(real_labels) - tp))
 
@@ -63,8 +63,8 @@ class HyperparameterTuner:
         self.best_distance_function = None
         self.best_scaler = None
         self.best_model = None
+        self._f_score = None
 
-    # TODO: find parameters with the best f1 score on validation dataset
     def tuning_without_scaling(self, distance_funcs, x_train, y_train, x_val, y_val):
         """
         In this part, you need to try different distance functions you implemented in part 1.1 and different values of k (among 1, 3, 5, ... , 29), and find the best model with the highest f1-score on the given validation set.
@@ -85,13 +85,20 @@ class HyperparameterTuner:
         For the same distance function, further break tie by prioritizing a smaller k.
         """
 
-        # You need to assign the final values to these variables
-        self.best_k = None
-        self.best_distance_function = None
-        self.best_model = None
-        raise NotImplementedError
+        for k in range(1, len(x_train)):
+            for key in distance_funcs:
+                knn = KNN(k, distance_funcs[key])
 
-    # TODO: find parameters with the best f1 score on validation dataset, with normalized data
+                knn.train(x_train, y_train)
+
+                new_f_score = f1_score(y_val, knn.predict(x_val))
+
+                if self._f_score is None or new_f_score > self._f_score:
+                    self.best_k = k
+                    self.best_distance_function = distance_funcs[key]
+                    self.best_model = knn
+                    self._f_score = new_f_score
+
     def tuning_with_scaling(self, distance_funcs, scaling_classes, x_train, y_train, x_val, y_val):
         """
         This part is the same as "tuning_without_scaling", except that you also need to try two different scalers implemented in Part 1.3. More specifically, before passing the training and validation data to KNN model, apply the scalers in scaling_classes to both of them. 
@@ -109,13 +116,23 @@ class HyperparameterTuner:
         First check scaler, prioritizing "min_max_scale" over "normalize" (which will also be the insertion order of scaling_classes). Then follow the same rule as in "tuning_without_scaling".
         """
 
-        # You need to assign the final values to these variables
-        self.best_k = None
-        self.best_distance_function = None
-        self.best_scaler = None
-        self.best_model = None
-        raise NotImplementedError
+        for k in range(1, len(x_train)):
+            for key in distance_funcs:
+                for scalerName in scaling_classes:
+                    knn = KNN(k, distance_funcs[key])
 
+                    scaler = scaling_classes[scalerName]
+
+                    knn.train(scaler(x_train), y_train)
+
+                    new_f_score = f1_score(y_val, knn.predict(scaler(x_val)))
+
+                    if self._f_score is None or new_f_score > self._f_score:
+                        self.best_k = k
+                        self.best_distance_function = distance_funcs[key]
+                        self.best_scaler = scaler
+                        self.best_model = knn
+                        self._f_score = new_f_score
 
 class NormalizationScaler:
     def __init__(self):
