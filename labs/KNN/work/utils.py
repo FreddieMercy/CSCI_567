@@ -63,7 +63,6 @@ class HyperparameterTuner:
         self.best_distance_function = None
         self.best_scaler = None
         self.best_model = None
-        self._f_score = None
 
     def tuning_without_scaling(self, distance_funcs, x_train, y_train, x_val, y_val):
         """
@@ -85,6 +84,8 @@ class HyperparameterTuner:
         For the same distance function, further break tie by prioritizing a smaller k.
         """
 
+        f_score = None
+
         for k in range(1, len(x_train)):
             for key in distance_funcs:
                 knn = KNN(k, distance_funcs[key])
@@ -93,11 +94,10 @@ class HyperparameterTuner:
 
                 new_f_score = f1_score(y_val, knn.predict(x_val))
 
-                if self._f_score is None or new_f_score > self._f_score:
+                if f_score is None or new_f_score > f_score:
                     self.best_k = k
                     self.best_distance_function = distance_funcs[key]
                     self.best_model = knn
-                    self._f_score = new_f_score
 
     def tuning_with_scaling(self, distance_funcs, scaling_classes, x_train, y_train, x_val, y_val):
         """
@@ -116,23 +116,24 @@ class HyperparameterTuner:
         First check scaler, prioritizing "min_max_scale" over "normalize" (which will also be the insertion order of scaling_classes). Then follow the same rule as in "tuning_without_scaling".
         """
 
+        f_score = None
+        
         for k in range(1, len(x_train)):
             for key in distance_funcs:
-                for scalerName in scaling_classes:
+                for scalarName in scaling_classes:
                     knn = KNN(k, distance_funcs[key])
 
-                    scaler = scaling_classes[scalerName]
+                    scalar = scaling_classes[scalarName]
 
-                    knn.train(scaler(x_train), y_train)
+                    knn.train(scalar(x_train), y_train)
 
-                    new_f_score = f1_score(y_val, knn.predict(scaler(x_val)))
+                    new_f_score = f1_score(y_val, knn.predict(scalar(x_val)))
 
-                    if self._f_score is None or new_f_score > self._f_score:
+                    if f_score is None or new_f_score > f_score:
                         self.best_k = k
                         self.best_distance_function = distance_funcs[key]
-                        self.best_scaler = scaler
+                        self.best_scaler = scalar
                         self.best_model = knn
-                        self._f_score = new_f_score
 
 class NormalizationScaler:
     def __init__(self):
