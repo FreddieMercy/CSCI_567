@@ -41,11 +41,9 @@ def linear_regression_noreg(X, y):
   #####################################################
   #	TODO 2: Fill in your code here       
   # TODO  : Add tests
-  #####################################################		
-  w = np.zeros(len(X[0]))
-    
-  for x in X:
-    if np.dot(w, x) != 
+  #####################################################
+
+  w = np.dot(np.dot(np.linalg.inv(np.dot(X, X)), X), y)
   
   return w
 
