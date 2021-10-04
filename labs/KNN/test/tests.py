@@ -155,4 +155,5 @@ class test_KNN_Tests(TestUtilities):
 
         knn.train(training, np.zeros(10))
 
-        self.assertEqual(knn.get_k_neighbors([0]), [([1], 1.0), ([2], 2.0), ([3], 3.0), ([4], 4.0)])
+        result = [(p[0][0], p[1]) for p in knn.get_k_neighbors([0])]
+        self.assertEqual(result, [([1], 1.0), ([2], 2.0), ([3], 3.0), ([4], 4.0)])

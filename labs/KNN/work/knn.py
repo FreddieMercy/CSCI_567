@@ -6,8 +6,7 @@ from collections import Counter
 ############################################################################
 
 class KNN:
-    _traningSet = []
-    _traningLabel = []
+    _traningSetWithLabel = []
 
     def __init__(self, k, distance_function):
         """
@@ -29,8 +28,11 @@ class KNN:
         :param features: List[List[float]]
         :param labels: List[int]
         """
-        self._traningSet = features[:]
-        self._traningLabel = labels[:]
+        traningSet = features[:]
+        traningLabel = labels[:]
+
+        for i in range(len(traningSet)):
+            self._traningSetWithLabel.append((traningSet[i], traningLabel[i]))
 
     def get_k_neighbors(self, point):
         """
@@ -41,7 +43,9 @@ class KNN:
         :return:  List[int]
         """
 
-        buffer = [(self._traningSet[i][:], self.distance_function(point, self._traningSet[i])) for i in range(len(self._traningSet))]
+        buffer = [(self._traningSetWithLabel[i][:],
+                   self.distance_function(point, self._traningSetWithLabel[i][0]))
+                  for i in range(len(self._traningSetWithLabel))]
         buffer.sort(key=lambda distance : distance[-1])
 
         return buffer[:self.k]
