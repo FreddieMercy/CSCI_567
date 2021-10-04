@@ -1,5 +1,6 @@
+import copy
+
 import numpy as np
-from knn import KNN
 
 
 ############################################################################
@@ -133,7 +134,7 @@ class NormalizationScaler:
         :return: List[List[float]]
         """
 
-        features = feature[:]
+        features = copy.deepcopy(feature)
 
         for i in range(len(features)):
 
@@ -167,7 +168,7 @@ class MinMaxScaler:
         :return: List[List[float]]
         """
 
-        features = feature[:]
+        features = copy.deepcopy(feature)
 
         globalMini = [min(features[:][i]) for i in range(len(features[0]))]
         globalMaxi = [max(features[:][i]) for i in range(len(features[0]))]
@@ -175,7 +176,7 @@ class MinMaxScaler:
         for i in range(len(features)):
             for j in range(len(features[0])):
 
-                if globalMaxi[j] == globalMini[i]:
+                if globalMaxi[j] == globalMini[j]:
                     features[i][j] = 0
                     continue
 
