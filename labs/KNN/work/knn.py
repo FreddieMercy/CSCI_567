@@ -49,8 +49,7 @@ class KNN:
         buffer.sort(key=lambda distance : distance[-1])
 
         return buffer[:self.k]
-		
-	# TODO: predict labels of a list of points
+
     def predict(self, features):
         """
         This function takes 2D list of test data points, similar to those from train function. Here, you need to process
@@ -61,8 +60,23 @@ class KNN:
         :param features: List[List[float]]
         :return: List[int]
         """
-        raise NotImplementedError	
 
+        predict = []
+
+        for point in features:
+            result = {}
+            anslabel = None
+            ansCount = None
+            for p in self.get_k_neighbors(point):
+                label = p[0][1]
+                result[label] = result.get(label, 0) + 1
+                if anslabel is None or ansCount < result[label]:
+                    anslabel = label
+                    ansCount = result[label]
+
+            predict.append(anslabel)
+
+        return predict
 
 if __name__ == '__main__':
     print(np.__version__)
