@@ -121,7 +121,7 @@ class NormalizationScaler:
     def __init__(self):
         pass
 
-    def __call__(self, features):
+    def __call__(self, feature):
         """
         Normalize features for every sample
 
@@ -133,6 +133,8 @@ class NormalizationScaler:
         :return: List[List[float]]
         """
 
+        features = feature[:]
+
         for i in range(len(features)):
 
             deno = np.sqrt(np.dot(features[i], features[i]))
@@ -142,7 +144,7 @@ class NormalizationScaler:
 
             features[i] = [p / deno for p in features[i]]
 
-
+        return features
 
 class MinMaxScaler:
     def __init__(self):
