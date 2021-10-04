@@ -39,9 +39,14 @@ def linear_regression_noreg(X, y):
   - w: a numpy array of shape (D, )
   """
   #####################################################
-  #	TODO 2: Fill in your code here                    #
+  #	TODO 2: Fill in your code here       
+  # TODO  : Add tests
   #####################################################		
-  w = None
+  w = np.zeros(len(X[0]))
+    
+  for x in X:
+    if np.dot(w, x) != 
+  
   return w
 
 
