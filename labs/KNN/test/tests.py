@@ -197,4 +197,6 @@ class test_KNN_Tests(TestUtilities):
         features = [[3, 4], [1, -1], [0, 0]]
         expect = [[0.6, 0.8], [0.707107, -0.707107], [0, 0]]
 
-        self.assertEqual(NormalizationScaler.__call__(features), expect)
+        scaler = NormalizationScaler()
+
+        self.assertEqual(scaler(features), expect)
