@@ -121,7 +121,6 @@ class NormalizationScaler:
     def __init__(self):
         pass
 
-    # TODO: normalize data
     def __call__(self, features):
         """
         Normalize features for every sample
