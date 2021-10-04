@@ -31,7 +31,7 @@ class Distances:
         :return: float
         """
 
-        return sum([(p1 - p2) ** 3 for p1, p2 in zip(point1, point2)]) ** (1 / 3)
+        return np.cbrt(sum([(p1 - p2) ** 3 for p1, p2 in zip(point1, point2)]))
 
     @staticmethod
     def euclidean_distance(point1, point2):
@@ -40,7 +40,7 @@ class Distances:
         :param point2: List[float]
         :return: float
         """
-        return sum([(p1 - p2) ** 2 for p1, p2 in zip(point1, point2)]) ** (1 / 2)
+        return np.sqrt(sum([(p1 - p2) ** 2 for p1, p2 in zip(point1, point2)]))
 
     @staticmethod
     def cosine_similarity_distance(point1, point2):
