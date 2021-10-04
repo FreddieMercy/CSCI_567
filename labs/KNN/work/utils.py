@@ -48,7 +48,12 @@ class Distances:
        :param point2: List[float]
        :return: float
        """
-        return np.dot(point1, point2) / (np.sqrt(np.dot(point1, point1)) * np.sqrt(np.dot(point2, point2)))
+        x1 = np.sqrt(np.dot(point1, point1))
+        x2 = np.sqrt(np.dot(point2, point2))
+
+        if x1 == 0 or x2 == 0:
+            return 1
+        return 1 - (np.dot(point1, point2) / (x1 * x2))
 
 
 
