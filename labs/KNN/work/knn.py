@@ -6,6 +6,9 @@ from collections import Counter
 ############################################################################
 
 class KNN:
+    _traningSet = []
+    _traningLabel = []
+
     def __init__(self, k, distance_function):
         """
         :param k: int
@@ -14,7 +17,6 @@ class KNN:
         self.k = k
         self.distance_function = distance_function
 
-    # TODO: save features and lable to self
     def train(self, features, labels):
         """
         In this function, features is simply training data which is a 2D list with float values.
@@ -27,7 +29,8 @@ class KNN:
         :param features: List[List[float]]
         :param labels: List[int]
         """
-        raise NotImplementedError
+        self._traningSet = features[:]
+        self._traningLabel = labels[:]
 
     # TODO: find KNN of one point
     def get_k_neighbors(self, point):
