@@ -60,9 +60,11 @@ def regularized_linear_regression(X, y, lambd):
     - w: a numpy array of shape (D, )
     """
   #####################################################
-  # TODO 4: Fill in your code here                    #
+  # TODO 4: Fill in your code here
+  # TODO  : Add tests
   #####################################################		
-    w = None
+    w = np.dot(np.dot(np.linalg.inv(np.dot(X, X) + lambd * np.identity(len(X))), X), y)
+
     return w
 
 ###### Part 1.4 ######
