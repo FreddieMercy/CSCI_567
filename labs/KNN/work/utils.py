@@ -15,7 +15,9 @@ def f1_score(real_labels, predicted_labels):
     """
     tp = sum([1 if r == p and r == 1 else 0 for r, p in zip(real_labels, predicted_labels)])
 
-    return tp / (tp + 0.5 * (len(real_labels) - tp))
+    falses = sum([1 if r != p else 0 for r, p in zip(real_labels, predicted_labels)])
+
+    return tp / (tp + 0.5 * falses)
 
 
 class Distances:
@@ -31,7 +33,7 @@ class Distances:
         :return: float
         """
 
-        return np.cbrt(sum([(p1 - p2) ** 3 for p1, p2 in zip(point1, point2)]))
+        return np.cbrt(sum([abs(p1 - p2) ** 3 for p1, p2 in zip(point1, point2)]))
 
     @staticmethod
     def euclidean_distance(point1, point2):
