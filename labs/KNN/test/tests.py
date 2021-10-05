@@ -10,7 +10,7 @@ class TestUtilities(TestCase):
     def legacy_minkowski_distance(self, point1, point2):
         sum = 0
         for i in range(len(point1)):
-            tmp = point1[i] - point2[i]
+            tmp = abs(point1[i] - point2[i])
             tmp **= 3
             sum += tmp
         return np.cbrt(sum)
