@@ -1,5 +1,5 @@
 import numpy as np
-from knn import KNN
+from work.knn import KNN
 
 
 ############################################################################
