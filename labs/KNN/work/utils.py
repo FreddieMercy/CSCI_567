@@ -196,8 +196,19 @@ class MinMaxScaler:
 
         features = [list(f) for f in feature]
 
-        globalMini = [min(features[:][i]) for i in range(len(features[0]))]
-        globalMaxi = [max(features[:][i]) for i in range(len(features[0]))]
+        globalMini = []
+        globalMaxi = []
+
+        for col in range(len(features[0])):
+            tmpMini = []
+            tmpMaxi = []
+
+            for row in range(len(features)):
+                tmpMini.append(features[row][col])
+                tmpMaxi.append(features[row][col])
+
+            globalMini.append(min(tmpMini))
+            globalMaxi.append(max(tmpMaxi))
 
         for i in range(len(features)):
             for j in range(len(features[0])):
