@@ -13,9 +13,14 @@ def f1_score(real_labels, predicted_labels):
     :param predicted_labels: List[int]
     :return: float
     """
-    tp = sum([1 if r == p and r == 1 else 0 for r, p in zip(real_labels, predicted_labels)])
 
-    falses = sum([1 if r != p else 0 for r, p in zip(real_labels, predicted_labels)])
+    tp = 0
+    falses = 0
+    for r, p in zip(real_labels, predicted_labels):
+        if r == p and r == 1:
+            tp+=1
+        if r != p:
+            falses+=1
 
     return tp / (tp + 0.5 * falses)
 
