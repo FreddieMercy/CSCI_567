@@ -131,7 +131,7 @@ class HyperparameterTuner:
                 for scalarName in scaling_classes:
                     knn = KNN(k, distance_funcs[key])
 
-                    scalar = scaling_classes[scalarName]
+                    scalar = scaling_classes[scalarName]()
 
                     knn.train(scalar(x_train), y_train)
 
