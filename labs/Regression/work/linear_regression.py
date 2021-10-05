@@ -82,9 +82,22 @@ def tune_lambda(Xtrain, ytrain, Xval, yval):
     - bestlambda: the best lambda you find among 2^{-14}, 2^{-13}, ..., 2^{-1}, 1.
     """
     #####################################################
-    # TODO 5: Fill in your code here                    #
-    #####################################################		
+    # TODO 5: Fill in your code here
+    # TODO  : Add tests
+    #####################################################
+
+    lambdas = [2**(-i) for i in range(15)]
+
     bestlambda = None
+    miniMeanSqErr = None
+
+    for lambdaVal in lambdas:
+        cur_miniMeanSqErr = mean_square_error(regularized_linear_regression(Xtrain, ytrain, lambdaVal), Xval, yval)
+
+        if miniMeanSqErr is None or cur_miniMeanSqErr < miniMeanSqErr:
+            miniMeanSqErr = cur_miniMeanSqErr
+            bestlambda = lambdaVal
+
     return bestlambda
     
 
