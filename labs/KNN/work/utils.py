@@ -98,6 +98,7 @@ class HyperparameterTuner:
                     self.best_k = k
                     self.best_distance_function = distance_funcs[key]
                     self.best_model = knn
+                    f_score = new_f_score
 
     def tuning_with_scaling(self, distance_funcs, scaling_classes, x_train, y_train, x_val, y_val):
         """
@@ -134,6 +135,7 @@ class HyperparameterTuner:
                         self.best_distance_function = distance_funcs[key]
                         self.best_scaler = scalar
                         self.best_model = knn
+                        f_score = new_f_score
 
 class NormalizationScaler:
     def __init__(self):
