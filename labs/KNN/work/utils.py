@@ -125,10 +125,10 @@ class HyperparameterTuner:
         """
 
         f_score = None
-        
-        for k in range(1, len(x_train)):
-            for key in distance_funcs:
-                for scalarName in scaling_classes:
+
+        for scalarName in scaling_classes:
+            for k in range(1, len(x_train)):
+                for key in distance_funcs:
                     knn = KNN(k, distance_funcs[key])
 
                     scalar = scaling_classes[scalarName]()
