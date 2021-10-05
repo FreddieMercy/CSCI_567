@@ -103,7 +103,7 @@ class HyperparameterTuner:
 
                 if f_score is None or new_f_score > f_score:
                     self.best_k = k
-                    self.best_distance_function = distance_funcs[key]
+                    self.best_distance_function = key
                     self.best_model = knn
                     f_score = new_f_score
 
@@ -139,7 +139,7 @@ class HyperparameterTuner:
 
                     if f_score is None or new_f_score > f_score:
                         self.best_k = k
-                        self.best_distance_function = distance_funcs[key]
+                        self.best_distance_function = key
                         self.best_scaler = scalar
                         self.best_model = knn
                         f_score = new_f_score
