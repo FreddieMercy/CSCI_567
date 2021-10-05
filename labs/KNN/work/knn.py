@@ -28,11 +28,8 @@ class KNN:
         :param features: List[List[float]]
         :param labels: List[int]
         """
-        traningSet = features[:]
-        traningLabel = labels[:]
 
-        for i in range(len(traningSet)):
-            self._traningSetWithLabel.append((traningSet[i], traningLabel[i]))
+        self._traningSetWithLabel = [(list(features[i]), labels[i]) for i in range(len(features))]
 
     def get_k_neighbors(self, point):
         """

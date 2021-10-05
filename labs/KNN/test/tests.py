@@ -10,11 +10,10 @@ class TestUtilities(TestCase):
     def legacy_minkowski_distance(self, point1, point2):
         sum = 0
         for i in range(len(point1)):
-            tmp = point1[i] - point2[i]
+            tmp = abs(point1[i] - point2[i])
             tmp **= 3
             sum += tmp
-        sum **= (1 / 3)
-        return sum
+        return np.cbrt(sum)
 
     def legacy_euclidean_distance(self, point1, point2):
         sum = 0
@@ -22,8 +21,7 @@ class TestUtilities(TestCase):
             tmp = point1[i] - point2[i]
             tmp **= 2
             sum += tmp
-        sum **= (1 / 2)
-        return sum
+        return np.sqrt(sum)
 
     def AssertLists(self, left, right):
         self.assertIsNotNone(left)
@@ -197,9 +195,9 @@ class test_KNN_Tests(TestUtilities):
         features = [[3, 4], [1, -1], [0, 0]]
         expect = [[0.6, 0.8], [0.7071067811865475, -0.7071067811865475], [0, 0]]
 
-        scaler = NormalizationScaler()
+        scalar = NormalizationScaler()
 
-        self.assertEqual(scaler(features), expect)
+        self.assertEqual(scalar(features), expect)
 
 
     def test_Knn_MinMaxScaler_Test(self):
@@ -207,6 +205,6 @@ class test_KNN_Tests(TestUtilities):
         features = [[2, -1], [-1, 5], [0, 0]]
         expect = [[1.0, 0.0], [0.0, 1.0], [0.3333333333333333, 0.16666666666666666]]
 
-        scaler = MinMaxScaler()
+        scalar = MinMaxScaler()
 
-        self.assertEqual(scaler(features), expect)
+        self.assertEqual(scalar(features), expect)

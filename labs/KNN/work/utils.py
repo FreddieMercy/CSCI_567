@@ -13,9 +13,16 @@ def f1_score(real_labels, predicted_labels):
     :param predicted_labels: List[int]
     :return: float
     """
-    tp = sum([1 if r == p else 0 for r, p in zip(real_labels, predicted_labels)])
 
-    return tp / (tp + 0.5 * (len(real_labels) - tp))
+    tp = 0
+    falses = 0
+    for r, p in zip(real_labels, predicted_labels):
+        if r == p and r == 1:
+            tp+=1
+        if r != p:
+            falses+=1
+
+    return tp / (tp + 0.5 * falses)
 
 
 class Distances:
@@ -31,7 +38,7 @@ class Distances:
         :return: float
         """
 
-        return sum([(p1 - p2) ** 3 for p1, p2 in zip(point1, point2)]) ** (1 / 3)
+        return np.cbrt(sum([abs(p1 - p2) ** 3 for p1, p2 in zip(point1, point2)]))
 
     @staticmethod
     def euclidean_distance(point1, point2):
@@ -40,7 +47,7 @@ class Distances:
         :param point2: List[float]
         :return: float
         """
-        return sum([(p1 - p2) ** 2 for p1, p2 in zip(point1, point2)]) ** (1 / 2)
+        return np.sqrt(sum([(p1 - p2) ** 2 for p1, p2 in zip(point1, point2)]))
 
     @staticmethod
     def cosine_similarity_distance(point1, point2):
@@ -63,7 +70,6 @@ class HyperparameterTuner:
         self.best_distance_function = None
         self.best_scaler = None
         self.best_model = None
-        self._f_score = None
 
     def tuning_without_scaling(self, distance_funcs, x_train, y_train, x_val, y_val):
         """
@@ -85,6 +91,8 @@ class HyperparameterTuner:
         For the same distance function, further break tie by prioritizing a smaller k.
         """
 
+        f_score = None
+
         for k in range(1, len(x_train)):
             for key in distance_funcs:
                 knn = KNN(k, distance_funcs[key])
@@ -93,11 +101,11 @@ class HyperparameterTuner:
 
                 new_f_score = f1_score(y_val, knn.predict(x_val))
 
-                if self._f_score is None or new_f_score > self._f_score:
+                if f_score is None or new_f_score > f_score:
                     self.best_k = k
                     self.best_distance_function = distance_funcs[key]
                     self.best_model = knn
-                    self._f_score = new_f_score
+                    f_score = new_f_score
 
     def tuning_with_scaling(self, distance_funcs, scaling_classes, x_train, y_train, x_val, y_val):
         """
@@ -116,23 +124,25 @@ class HyperparameterTuner:
         First check scaler, prioritizing "min_max_scale" over "normalize" (which will also be the insertion order of scaling_classes). Then follow the same rule as in "tuning_without_scaling".
         """
 
+        f_score = None
+        
         for k in range(1, len(x_train)):
             for key in distance_funcs:
-                for scalerName in scaling_classes:
+                for scalarName in scaling_classes:
                     knn = KNN(k, distance_funcs[key])
 
-                    scaler = scaling_classes[scalerName]
+                    scalar = scaling_classes[scalarName]()
 
-                    knn.train(scaler(x_train), y_train)
+                    knn.train(scalar(x_train), y_train)
 
-                    new_f_score = f1_score(y_val, knn.predict(scaler(x_val)))
+                    new_f_score = f1_score(y_val, knn.predict(scalar(x_val)))
 
-                    if self._f_score is None or new_f_score > self._f_score:
+                    if f_score is None or new_f_score > f_score:
                         self.best_k = k
                         self.best_distance_function = distance_funcs[key]
-                        self.best_scaler = scaler
+                        self.best_scaler = scalar
                         self.best_model = knn
-                        self._f_score = new_f_score
+                        f_score = new_f_score
 
 class NormalizationScaler:
     def __init__(self):
