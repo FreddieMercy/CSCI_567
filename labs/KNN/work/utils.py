@@ -93,8 +93,8 @@ class HyperparameterTuner:
 
         f_score = None
 
-        for k in range(1, len(x_train)):
-            for key in distance_funcs:
+        for key in distance_funcs:
+            for k in range(1, len(x_train)):
                 knn = KNN(k, distance_funcs[key])
 
                 knn.train(x_train, y_train)
@@ -103,7 +103,7 @@ class HyperparameterTuner:
 
                 if f_score is None or new_f_score > f_score:
                     self.best_k = k
-                    self.best_distance_function = distance_funcs[key]
+                    self.best_distance_function = key
                     self.best_model = knn
                     f_score = new_f_score
 
@@ -125,10 +125,10 @@ class HyperparameterTuner:
         """
 
         f_score = None
-        
-        for k in range(1, len(x_train)):
+
+        for scalarName in scaling_classes:
             for key in distance_funcs:
-                for scalarName in scaling_classes:
+                for k in range(1, len(x_train)):
                     knn = KNN(k, distance_funcs[key])
 
                     scalar = scaling_classes[scalarName]()
@@ -139,8 +139,8 @@ class HyperparameterTuner:
 
                     if f_score is None or new_f_score > f_score:
                         self.best_k = k
-                        self.best_distance_function = distance_funcs[key]
-                        self.best_scaler = scalar
+                        self.best_distance_function = key
+                        self.best_scaler = scalarName
                         self.best_model = knn
                         f_score = new_f_score
 
@@ -196,8 +196,19 @@ class MinMaxScaler:
 
         features = [list(f) for f in feature]
 
-        globalMini = [min(features[:][i]) for i in range(len(features[0]))]
-        globalMaxi = [max(features[:][i]) for i in range(len(features[0]))]
+        globalMini = []
+        globalMaxi = []
+
+        for col in range(len(features[0])):
+            tmpMini = []
+            tmpMaxi = []
+
+            for row in range(len(features)):
+                tmpMini.append(features[row][col])
+                tmpMaxi.append(features[row][col])
+
+            globalMini.append(min(tmpMini))
+            globalMaxi.append(max(tmpMaxi))
 
         for i in range(len(features)):
             for j in range(len(features[0])):
