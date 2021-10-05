@@ -68,7 +68,7 @@ class HyperparameterTuner:
     def __init__(self):
         self.best_k = None
         self.best_distance_function = None
-        self.best_scaler = None
+        self.best_scalar = None
         self.best_model = None
 
     def tuning_without_scaling(self, distance_funcs, x_train, y_train, x_val, y_val):
@@ -140,7 +140,7 @@ class HyperparameterTuner:
                     if f_score is None or new_f_score > f_score:
                         self.best_k = k
                         self.best_distance_function = distance_funcs[key]
-                        self.best_scaler = scalar
+                        self.best_scalar = scalar
                         self.best_model = knn
                         f_score = new_f_score
 
