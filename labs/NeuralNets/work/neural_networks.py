@@ -99,6 +99,7 @@ class linear_layer:
         # only return backward_output, but need to compute self.gradient['W'] and self.gradient['b']
         #################################################################################################
 
+        backward_output = []
 
         return backward_output
 
