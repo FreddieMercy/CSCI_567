@@ -164,12 +164,12 @@ class NormalizationScaler:
 
         for i in range(len(features)):
 
-            deno = np.sqrt(np.dot(features[i], features[i]))
+            denominator = np.sqrt(np.dot(features[i], features[i]))
 
-            if deno == 0:
+            if denominator == 0:
                 continue
 
-            features[i] = [p / deno for p in features[i]]
+            features[i] = [p / denominator for p in features[i]]
 
         return features
 
