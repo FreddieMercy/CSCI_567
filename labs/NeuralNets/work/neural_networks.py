@@ -40,7 +40,7 @@ class linear_layer:
         #   - self.params['b']
         ###############################################################################################
 
-        self.params['W'] = np.array([np.random.normal(0, 0.1, input_D) for i in range(output_D)])
+        self.params['W'] = np.array([np.random.normal(0, 0.1, output_D) for i in range(input_D)])
         self.params['b'] = np.zeros(output_D)
 
         ###############################################################################################
