@@ -43,3 +43,9 @@ hs_err_pid*
 
 ~*.docx
 ~*.tmp
+
+.voc/
+
+venv/
+
+__pycache__/
