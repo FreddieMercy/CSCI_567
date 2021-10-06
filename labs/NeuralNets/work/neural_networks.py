@@ -40,7 +40,8 @@ class linear_layer:
         #   - self.params['b']
         ###############################################################################################
 
-        
+        self.params['W'] = np.array([np.random.normal(0, 0.1, input_D) for i in range(output_D)])
+        self.params['b'] = np.zeros(output_D)
 
         ###############################################################################################
         # TODO: Initialize the following two (gradients) with zeros
@@ -49,6 +50,8 @@ class linear_layer:
         ###############################################################################################
 
 
+        self.gradient['W'] = np.array([np.zeros(output_D) for i in range(input_D)])
+        self.gradient['b'] = np.zeros(output_D)
 
 
     def forward(self, X):
@@ -66,6 +69,8 @@ class linear_layer:
         ################################################################################
         # TODO: Implement the linear forward pass. Store the result in forward_output  #
         ################################################################################
+
+        forward_output = []
 
         return forward_output
 
