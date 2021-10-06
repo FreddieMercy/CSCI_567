@@ -67,12 +67,11 @@ class linear_layer:
         """
 
         ################################################################################
-        # TODO: Implement the linear forward pass. Store the result in forward_output  #
+        # TODO: Implement the linear forward pass. Store the result in forward_output
+        # TODO: add test
         ################################################################################
 
-        forward_output = []
-
-        return forward_output
+        return np.dot(X, W)
 
     def backward(self, X, grad):
 
@@ -100,6 +99,12 @@ class linear_layer:
         #################################################################################################
 
         backward_output = []
+
+        for input_D_row in X:
+            for g_row in grad:
+
+            [forward_output.append(np.dot([W[row][i] for row in range(len(W))], input_D_row)) for i in range(W[0])]
+        return forward_output
 
         return backward_output
 
@@ -134,8 +139,8 @@ class relu:
         ################################################################################
         # TODO: Implement the relu forward pass. Store the result in forward_output    #
         ################################################################################
-        
 
+        forward_output = []
         return forward_output
 
     def backward(self, X, grad):
@@ -157,6 +162,7 @@ class relu:
         # You can use the mask created in the forward step.
         ####################################################################################################
 
+        backward_output = []
 
         return backward_output
 
@@ -179,6 +185,7 @@ class tanh:
         # You can use np.tanh()
         ################################################################################
 
+        forward_output = []
         return forward_output
 
     def backward(self, X, grad):
@@ -197,6 +204,7 @@ class tanh:
         # Derivative of tanh(z) is (1 - tanh(z)^2)
         ####################################################################################################
 
+        backward_output = []
 
         return backward_output
 
@@ -258,7 +266,7 @@ class dropout:
         # You can use the mask created in the forward step
         ####################################################################################################
 
-
+        backward_output = []
         return backward_output
 
 
@@ -280,7 +288,7 @@ def miniBatchGradientDescent(model, momentum, _alpha, _learning_rate):
                     # Note again that the gradient is stored in g already.
                     ####################################################################################
 
-
+                    pass
 
 
                 else:
@@ -289,7 +297,7 @@ def miniBatchGradientDescent(model, momentum, _alpha, _learning_rate):
                     # Access the previous momentum by momentum[module_name + '_' + key], and then update it directly.
                     ###################################################################################################
 
-
+                    pass
 
     return model
 
