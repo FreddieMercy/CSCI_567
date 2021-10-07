@@ -71,7 +71,7 @@ class linear_layer:
         # TODO: add test
         ################################################################################
 
-        return np.dot(X, W)
+        return np.add(np.dot(X, self.params['W']), self.params['b'])
 
     def backward(self, X, grad):
 
@@ -98,13 +98,9 @@ class linear_layer:
         # only return backward_output, but need to compute self.gradient['W'] and self.gradient['b']
         #################################################################################################
 
-        backward_output = []
-
-        for input_D_row in X:
-            for g_row in grad:
-
-            [forward_output.append(np.dot([W[row][i] for row in range(len(W))], input_D_row)) for i in range(W[0])]
-        return forward_output
+        self.gradient['W'] = np.dot(np.transpose(X), grad)
+        self.gradient['b'] = np.dot(grad, np.transpose(self.params['W']))
+        backward_output = np.dot(grad, np.transpose(self.params['W']))
 
         return backward_output
 
