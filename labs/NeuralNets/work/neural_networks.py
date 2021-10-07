@@ -98,9 +98,9 @@ class linear_layer:
         # only return backward_output, but need to compute self.gradient['W'] and self.gradient['b']
         #################################################################################################
 
-        backward_output = np.dot(grad, np.transpose(self.params['W']))
-        self.gradient['W'] = np.dot(np.transpose(backward_output), self.forward(X))
+        self.gradient['W'] = np.dot(np.transpose(grad), X)
         self.gradient['b'] = np.dot(grad, np.transpose(self.params['W']))
+        backward_output = np.dot(grad, np.transpose(self.params['W']))
 
         return backward_output
 
