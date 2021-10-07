@@ -393,6 +393,9 @@ def main(main_params):
 
             ### backward pass ###
             grad_a2 = model['loss'].backward(a2, y)
+            grad_d1 = model['L2'].backward(d1, grad_a2)
+            grad_h1 = model['drop1'].backward(h1, grad_d1)
+            grad_a1 = model['nonlinear1'].backward(a1, grad_h1)
             ######################################################################################
             # TODO: Call the backward methods of every layer in the model in reverse order.
             # We have given the first and last backward calls (above and below this TODO block).
