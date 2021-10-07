@@ -197,9 +197,7 @@ class tanh:
         # Derivative of tanh(z) is (1 - tanh(z)^2)
         ####################################################################################################
 
-        backward_output = []
-
-        return backward_output
+        return np.array(np.array((1-np.tanh(X[i][j])**2)*grad[i][j] for j in len(X[i])) for i in len(X))
 
 
 # 4. Dropout
