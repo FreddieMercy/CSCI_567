@@ -115,7 +115,8 @@ def mapping_data(X, p):
     # TODO 6: Fill in your code here                    #
     #####################################################		
     
-    return X
+    return X # [X, ...]
+             # Phi/Power: apply to each single element.
 
 """
 NO MODIFICATIONS below this line.
