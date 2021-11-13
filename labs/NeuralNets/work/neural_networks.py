@@ -158,7 +158,7 @@ class relu:
         # You can use the mask created in the forward step.
         ####################################################################################################
 
-        return np.array(np.array(X[i][j]*grad[i][j] if self.mask[i][j] else 0 for j in len(X[i])) for i in len(X))
+        return np.array(np.array(X[i][j]*grad[i][j] if self.mask[i][j] else 0 for j in range(len(X[i]))) for i in range(len(X)))
 
 
     # 3. tanh Activation
@@ -197,7 +197,7 @@ class tanh:
         # Derivative of tanh(z) is (1 - tanh(z)^2)
         ####################################################################################################
 
-        return np.array(np.array((1-np.tanh(X[i][j])**2)*grad[i][j] for j in len(X[i])) for i in len(X))
+        return np.array(np.array((1-np.tanh(X[i][j])**2)*grad[i][j] for j in range(len(X[i]))) for i in range(len(X)))
 
 
 # 4. Dropout
@@ -258,6 +258,11 @@ class dropout:
         ####################################################################################################
 
         backward_output = []
+
+        #backward_output = np.multiply(np.multiply(X, self.mask), grad)
+
+        #backward_output = np.multiply(grad, self.mask)
+
         return backward_output
 
 
