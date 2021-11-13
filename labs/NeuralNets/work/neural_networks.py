@@ -5,6 +5,7 @@ import argparse
 import numpy as np
 import json
 
+
 ###################################
 #   Only modify the TODO blocks   #
 ###################################
@@ -12,7 +13,6 @@ import json
 
 # 1. One linear Neural Network layer with forward and backward steps
 class linear_layer:
-
     """
         The linear (affine/fully-connected) module.
 
@@ -30,7 +30,6 @@ class linear_layer:
     """
 
     def __init__(self, input_D, output_D):
-
         self.params = dict()
         self.gradient = dict()
 
@@ -49,13 +48,10 @@ class linear_layer:
         #   - self.gradient['b']
         ###############################################################################################
 
-
         self.gradient['W'] = np.array([np.zeros(output_D) for i in range(input_D)])
         self.gradient['b'] = np.zeros(output_D)
 
-
     def forward(self, X):
-
         """
             The forward pass of the linear (affine/fully-connected) module.
 
@@ -74,7 +70,6 @@ class linear_layer:
         return np.add(np.dot(X, self.params['W']), self.params['b'])
 
     def backward(self, X, grad):
-
         """
             The backward pass of the linear (affine/fully-connected) module.
 
@@ -105,10 +100,8 @@ class linear_layer:
         return backward_output
 
 
-
 # 2. ReLU Activation
 class relu:
-
     """
         The relu (rectified linear unit) module.
 
@@ -121,7 +114,6 @@ class relu:
         self.mask = None
 
     def forward(self, X):
-
         """
             The forward pass of the relu (rectified linear unit) module.
 
@@ -140,7 +132,6 @@ class relu:
         return np.array(np.array(max(0, c) for c in x) for x in X)
 
     def backward(self, X, grad):
-
         """
             The backward pass of the relu (rectified linear unit) module.
 
@@ -158,14 +149,15 @@ class relu:
         # You can use the mask created in the forward step.
         ####################################################################################################
 
-        return np.array(np.array(X[i][j]*grad[i][j] if self.mask[i][j] else 0 for j in range(len(X[i]))) for i in range(len(X)))
-
+        return np.array(
+            np.array(X[i][j] * grad[i][j] if self.mask[i][j] else 0 for j in range(len(X[i]))) for i in range(len(X)))
 
     # 3. tanh Activation
+
+
 class tanh:
 
     def forward(self, X):
-
         """
             Input:
             - X: A numpy array of arbitrary shape.
@@ -182,7 +174,6 @@ class tanh:
         return np.array(np.array(np.tanh(c) for c in x) for x in X)
 
     def backward(self, X, grad):
-
         """
             Input:
             - X: A numpy array of arbitrary shape, the input to the forward pass.
@@ -197,12 +188,12 @@ class tanh:
         # Derivative of tanh(z) is (1 - tanh(z)^2)
         ####################################################################################################
 
-        return np.array(np.array((1-np.tanh(X[i][j])**2)*grad[i][j] for j in range(len(X[i]))) for i in range(len(X)))
+        return np.array(
+            np.array((1 - np.tanh(X[i][j]) ** 2) * grad[i][j] for j in range(len(X[i]))) for i in range(len(X)))
 
 
 # 4. Dropout
 class dropout:
-
     """
         It is built up with one argument:
         - r: the dropout rate
@@ -257,19 +248,21 @@ class dropout:
         # You can use the mask created in the forward step
         ####################################################################################################
 
-        backward_output = []
+        # backward_output = []
 
-        #backward_output = np.multiply(np.multiply(X, self.mask), grad)
+        # backward_output = np.multiply(np.multiply(X, self.mask), grad)
 
-        #backward_output = np.multiply(grad, self.mask)
+        # backward_output = np.multiply(grad, self.mask)
 
-        return backward_output
+        # return backward_output
 
+        dq = np.multiply(grad, self.mask)
+
+        return np.array(np.array(X[i][j] * dq[i][j] if dq[i][j] != 0 else X[i][j] for j in range(len(X[i]))) for i in range(len(X)))
 
 
 # 5. Mini-batch Gradient Descent Optimization
 def miniBatchGradientDescent(model, momentum, _alpha, _learning_rate):
-
     for module_name, module in model.items():
 
         # check if a module has learnable parameters
@@ -298,14 +291,12 @@ def miniBatchGradientDescent(model, momentum, _alpha, _learning_rate):
     return model
 
 
-
 def main(main_params):
-
     ### set the random seed. DO NOT MODIFY. ###
     np.random.seed(int(main_params['random_seed']))
 
     ### data processing ###
-    Xtrain, Ytrain, Xval, Yval , _, _ = data_loader_mnist(dataset = main_params['input_file'])
+    Xtrain, Ytrain, Xval, Yval, _, _ = data_loader_mnist(dataset=main_params['input_file'])
     N_train, d = Xtrain.shape
     N_val, _ = Xval.shape
 
@@ -338,17 +329,16 @@ def main(main_params):
     _dropout_rate = float(main_params['dropout_rate'])
     _activation = main_params['activation']
 
-
     if _activation == 'relu':
         act = relu
     else:
         act = tanh
 
     # create objects (modules) from the module classes
-    model['L1'] = linear_layer(input_D = d, output_D = num_L1)
+    model['L1'] = linear_layer(input_D=d, output_D=num_L1)
     model['nonlinear1'] = act()
-    model['drop1'] = dropout(r = _dropout_rate)
-    model['L2'] = linear_layer(input_D = num_L1, output_D = num_L2)
+    model['drop1'] = dropout(r=_dropout_rate)
+    model['L2'] = linear_layer(input_D=num_L1, output_D=num_L2)
     model['loss'] = softmax_cross_entropy()
 
     # Momentum
@@ -380,14 +370,13 @@ def main(main_params):
         val_loss = 0.0
 
         for i in range(int(np.floor(N_train / minibatch_size))):
-
             # get a mini-batch of data
-            x, y = trainSet.get_example(idx_order[i * minibatch_size : (i + 1) * minibatch_size])
+            x, y = trainSet.get_example(idx_order[i * minibatch_size: (i + 1) * minibatch_size])
 
             ### forward pass ###
             a1 = model['L1'].forward(x)
             h1 = model['nonlinear1'].forward(a1)
-            d1 = model['drop1'].forward(h1, is_train = True)
+            d1 = model['drop1'].forward(h1, is_train=True)
             a2 = model['L2'].forward(d1)
             loss = model['loss'].forward(a2, y)
 
@@ -407,13 +396,12 @@ def main(main_params):
 
         ### Computing training accuracy and obj ###
         for i in range(int(np.floor(N_train / minibatch_size))):
-
             x, y = trainSet.get_example(np.arange(i * minibatch_size, (i + 1) * minibatch_size))
 
             ### forward pass ###
             a1 = model['L1'].forward(x)
             h1 = model['nonlinear1'].forward(a1)
-            d1 = model['drop1'].forward(h1, is_train = False)
+            d1 = model['drop1'].forward(h1, is_train=False)
             a2 = model['L2'].forward(d1)
             loss = model['loss'].forward(a2, y)
             train_loss += loss
@@ -429,13 +417,12 @@ def main(main_params):
 
         ### Computing validation accuracy ###
         for i in range(int(np.floor(N_val / minibatch_size))):
-
             x, y = valSet.get_example(np.arange(i * minibatch_size, (i + 1) * minibatch_size))
 
             ### forward pass ###
             a1 = model['L1'].forward(x)
             h1 = model['nonlinear1'].forward(a1)
-            d1 = model['drop1'].forward(h1, is_train = False)
+            d1 = model['drop1'].forward(h1, is_train=False)
             a2 = model['L2'].forward(d1)
             loss = model['loss'].forward(a2, y)
             val_loss += loss
@@ -460,11 +447,8 @@ def main(main_params):
     return train_loss_record, val_loss_record
 
 
-
 if __name__ == "__main__":
-
-
-    ###################################################################################### 
+    ######################################################################################
     # These are the default arguments used to run your code.
     # These parameters will be changed while grading.
     # You can modify them to test your code (this does not affect the grading as long as
