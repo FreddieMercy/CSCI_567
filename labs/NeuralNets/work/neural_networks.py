@@ -153,8 +153,7 @@ class relu:
         # You can use the mask created in the forward step.
         ####################################################################################################
 
-        return np.array(
-            np.array(X[i][j] * grad[i][j] if self.mask[i][j] else 0 for j in range(len(X[i]))) for i in range(len(X)))
+        return np.array([np.array([X[i][j] * grad[i][j] if self.mask[i][j] else 0 for j in range(len(X[i]))]) for i in range(len(X))])
 
     # 3. tanh Activation
 
