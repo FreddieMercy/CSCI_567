@@ -128,8 +128,12 @@ class relu:
         # TODO: Implement the relu forward pass. Store the result in forward_output    #
         ################################################################################
 
-        self.mask = np.array(np.array(c > 0 for c in x) for x in X)
-        return np.array(np.array(max(0, c) for c in x) for x in X)
+        length = len(X)
+        width = len(X[0])
+
+        self.mask = np.array([np.array([X[i][j] > 0 for j in range(width)]) for i in range(length)])
+
+        return np.array([np.array([max(X[i][j], 0) for j in range(width)]) for i in range(length)])
 
     def backward(self, X, grad):
         """
