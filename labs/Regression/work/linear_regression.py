@@ -114,7 +114,17 @@ def mapping_data(X, p):
     #####################################################
     # TODO 6: Fill in your code here                    #
     #####################################################		
-    
+
+    cols = len(X[0])
+
+    #white = np.insert(mapped_X, mapped_X.shape[1], white[:, -1], axis=1)
+
+    for i in range(2, p + 1):
+        for col in range(cols):
+            column = X[:, col]
+            column = np.power(column, i)
+            X = np.insert(X, X.shape[1], column, axis=1)
+
     return X
 
 """
