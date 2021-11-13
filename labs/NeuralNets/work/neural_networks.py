@@ -262,7 +262,7 @@ class dropout:
 
         dq = np.multiply(grad, self.mask)
 
-        return np.array(np.array(X[i][j] * dq[i][j] if dq[i][j] != 0 else X[i][j] for j in range(len(X[i]))) for i in range(len(X)))
+        return np.array([np.array([X[i][j] * dq[i][j] if dq[i][j] != 0 else X[i][j] for j in range(len(X[i]))]) for i in range(len(X))])
 
 
 # 5. Mini-batch Gradient Descent Optimization
