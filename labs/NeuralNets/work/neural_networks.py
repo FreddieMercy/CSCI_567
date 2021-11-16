@@ -94,7 +94,8 @@ class linear_layer:
         #################################################################################################
 
         self.gradient['W'] = np.dot(np.transpose(X), grad)
-        self.gradient['b'] = np.dot(np.transpose(grad), np.transpose(np.ones(len(X))))
+        self.gradient['b'] = np.mean(np.ones(len(X)), grad)
+        #self.gradient['b'] = np.mean(grad, axis=0)
         backward_output = np.dot(grad, np.transpose(self.params['W']))
 
         return backward_output
