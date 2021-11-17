@@ -174,7 +174,7 @@ class tanh:
         # You can use np.tanh()
         ################################################################################
 
-        return np.array(np.array([np.tanh(c) for c in x]) for x in X)
+        return np.tanh(X)
 
     def backward(self, X, grad):
         """
@@ -191,8 +191,7 @@ class tanh:
         # Derivative of tanh(z) is (1 - tanh(z)^2)
         ####################################################################################################
 
-        return np.array(
-            np.array([(1 - np.tanh(X[i][j]) ** 2) * grad[i][j]] for j in range(len(X[i]))) for i in range(len(X)))
+        return (1 - np.tanh(X) ** 2) * grad
 
 
 # 4. Dropout
