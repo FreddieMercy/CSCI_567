@@ -1,6 +1,5 @@
 from utils import softmax_cross_entropy, add_momentum, data_loader_mnist, predict_label, DataSplit
-import sys
-import os
+
 import argparse
 import numpy as np
 import json
@@ -39,7 +38,7 @@ class linear_layer:
         #   - self.params['b']
         ###############################################################################################
 
-        self.params['W'] = np.array([np.random.normal(0, 0.1, output_D) for i in range(input_D)])
+        self.params['W'] = np.random.normal(0, 0.1, size=(input_D, output_D))
         self.params['b'] = np.random.normal(0, 0.1, output_D)
 
         ###############################################################################################
@@ -48,7 +47,7 @@ class linear_layer:
         #   - self.gradient['b']
         ###############################################################################################
 
-        self.gradient['W'] = np.array([np.zeros(output_D) for i in range(input_D)])
+        self.gradient['W'] = np.zeros(shape=(input_D, output_D))
         self.gradient['b'] = np.zeros(output_D)
 
     def forward(self, X):
@@ -94,7 +93,7 @@ class linear_layer:
         #################################################################################################
 
         self.gradient['W'] = np.dot(np.transpose(X), grad)
-        self.gradient['b'] = np.sum(grad, axis=0).reshape((1, -1))
+        self.gradient['b'] = np.sum(grad, axis=0)
         backward_output = np.dot(grad, np.transpose(self.params['W']))
 
         return backward_output
@@ -261,10 +260,10 @@ def miniBatchGradientDescent(model, momentum, _alpha, _learning_rate):
 
         # check if a module has learnable parameters
         if hasattr(module, 'params'):
-            v = 0
             for key, _ in module.params.items():
                 # This is the gradient for the parameter named "key" in this module
                 g = module.gradient[key]
+                v = 0
 
                 if _alpha <= 0.0:
                     ####################################################################################
@@ -282,7 +281,7 @@ def miniBatchGradientDescent(model, momentum, _alpha, _learning_rate):
 
                     v += _alpha * momentum[module_name + '_' + key] - _learning_rate * g
 
-            module.params["W"] += v
+                module.params[key] += v
 
     return model
 
