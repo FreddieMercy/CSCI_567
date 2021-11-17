@@ -63,7 +63,6 @@ class linear_layer:
 
         ################################################################################
         # TODO: Implement the linear forward pass. Store the result in forward_output
-        # TODO: add test
         ################################################################################
 
         return np.add(np.dot(X, self.params['W']), self.params['b'])
