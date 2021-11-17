@@ -40,7 +40,7 @@ class linear_layer:
         ###############################################################################################
 
         self.params['W'] = np.array([np.random.normal(0, 0.1, output_D) for i in range(input_D)])
-        self.params['b'] = np.zeros(output_D)
+        self.params['b'] = np.random.normal(0, 0.1, output_D)
 
         ###############################################################################################
         # TODO: Initialize the following two (gradients) with zeros
@@ -94,8 +94,7 @@ class linear_layer:
         #################################################################################################
 
         self.gradient['W'] = np.dot(np.transpose(X), grad)
-        self.gradient['b'] = np.mean(np.ones(len(X)), grad)
-        #self.gradient['b'] = np.mean(grad, axis=0)
+        self.gradient['b'] = np.sum(grad, axis=0).reshape((1, -1))
         backward_output = np.dot(grad, np.transpose(self.params['W']))
 
         return backward_output
@@ -154,7 +153,8 @@ class relu:
         # You can use the mask created in the forward step.
         ####################################################################################################
 
-        return np.array([np.array([X[i][j] * grad[i][j] if self.mask[i][j] else 0 for j in range(len(X[i]))]) for i in range(len(X))])
+        return np.array([np.array([grad[i][j] if self.mask[i][j] else 0 for j in range(len(X[i]))]) for i in
+                         range(len(X))])
 
     # 3. tanh Activation
 
@@ -175,7 +175,7 @@ class tanh:
         # You can use np.tanh()
         ################################################################################
 
-        return np.array(np.array(np.tanh(c) for c in x) for x in X)
+        return np.array(np.array([np.tanh(c) for c in x]) for x in X)
 
     def backward(self, X, grad):
         """
@@ -193,7 +193,7 @@ class tanh:
         ####################################################################################################
 
         return np.array(
-            np.array((1 - np.tanh(X[i][j]) ** 2) * grad[i][j] for j in range(len(X[i]))) for i in range(len(X)))
+            np.array([(1 - np.tanh(X[i][j]) ** 2) * grad[i][j]] for j in range(len(X[i]))) for i in range(len(X)))
 
 
 # 4. Dropout
@@ -252,17 +252,7 @@ class dropout:
         # You can use the mask created in the forward step
         ####################################################################################################
 
-        # backward_output = []
-
-        # backward_output = np.multiply(np.multiply(X, self.mask), grad)
-
-        # backward_output = np.multiply(grad, self.mask)
-
-        # return backward_output
-
-        dq = np.multiply(grad, self.mask)
-
-        return np.array([np.array([X[i][j] * dq[i][j] if dq[i][j] != 0 else X[i][j] for j in range(len(X[i]))]) for i in range(len(X))])
+        return np.multiply(grad, self.mask)
 
 
 # 5. Mini-batch Gradient Descent Optimization
@@ -281,7 +271,7 @@ def miniBatchGradientDescent(model, momentum, _alpha, _learning_rate):
                     # TODO: update the model parameter module.params[key] by a step of gradient descent.
                     # Note again that the gradient is stored in g already.
                     ####################################################################################
-                    v += -_learning_rate * g
+                    v -= _learning_rate * g
                     pass
 
 
@@ -291,7 +281,7 @@ def miniBatchGradientDescent(model, momentum, _alpha, _learning_rate):
                     # Access the previous momentum by momentum[module_name + '_' + key], and then update it directly.
                     ###################################################################################################
 
-                    v += _alpha*momentum-_learning_rate*g
+                    v += _alpha * momentum - _learning_rate * g
                     pass
 
             module.params["W"] += v
