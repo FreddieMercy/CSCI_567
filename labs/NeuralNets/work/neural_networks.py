@@ -281,7 +281,7 @@ def miniBatchGradientDescent(model, momentum, _alpha, _learning_rate):
                     # Access the previous momentum by momentum[module_name + '_' + key], and then update it directly.
                     ###################################################################################################
 
-                    v += _alpha * momentum - _learning_rate * g
+                    v += _alpha * momentum[module_name + '_' + key] - _learning_rate * g
                     pass
 
             module.params["W"] += v
