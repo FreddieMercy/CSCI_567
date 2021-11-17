@@ -263,14 +263,13 @@ def miniBatchGradientDescent(model, momentum, _alpha, _learning_rate):
             for key, _ in module.params.items():
                 # This is the gradient for the parameter named "key" in this module
                 g = module.gradient[key]
-                v = 0
 
                 if _alpha <= 0.0:
                     ####################################################################################
                     # TODO: update the model parameter module.params[key] by a step of gradient descent.
                     # Note again that the gradient is stored in g already.
                     ####################################################################################
-                    v -= _learning_rate * g
+                    module.params[key] -= _learning_rate * g
 
 
                 else:
@@ -279,9 +278,8 @@ def miniBatchGradientDescent(model, momentum, _alpha, _learning_rate):
                     # Access the previous momentum by momentum[module_name + '_' + key], and then update it directly.
                     ###################################################################################################
 
-                    v += _alpha * momentum[module_name + '_' + key] - _learning_rate * g
-
-                module.params[key] += v
+                    momentum[module_name + '_' + key] = _alpha * momentum[module_name + '_' + key] - _learning_rate * g
+                    module.params[key] += momentum[module_name + '_' + key]
 
     return model
 
