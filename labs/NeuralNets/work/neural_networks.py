@@ -272,7 +272,6 @@ def miniBatchGradientDescent(model, momentum, _alpha, _learning_rate):
                     # Note again that the gradient is stored in g already.
                     ####################################################################################
                     v -= _learning_rate * g
-                    pass
 
 
                 else:
@@ -282,7 +281,6 @@ def miniBatchGradientDescent(model, momentum, _alpha, _learning_rate):
                     ###################################################################################################
 
                     v += _alpha * momentum[module_name + '_' + key] - _learning_rate * g
-                    pass
 
             module.params["W"] += v
 
