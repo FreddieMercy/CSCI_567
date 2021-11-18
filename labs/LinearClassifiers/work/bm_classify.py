@@ -212,7 +212,7 @@ def multiclass_each_derivative(C, y, w, x):
 
     P[y] = -(bot - 1) / bot
 
-    return np.transpose(np.dot(P, x.T))
+    return np.dot(P.reshape(-1, 1), x)
 
 
 def multiclass_predict(X, w, b):
