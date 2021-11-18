@@ -59,16 +59,22 @@ class test_KNN_Tests(TestUtilities):
         w = np.array([1, -1, 0])
         b = 100
 
-        y = np.array([1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1])/10
+        y = np.array([1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1]) / 10
 
-        Y = np.dot(X, w) + b-y
+        Y = np.dot(X, w) + b - y
 
-        self.assertEqual(round(np.mean(Y), 3), sum(Y)/Y.shape[0])
+        self.assertEqual(round(np.mean(Y), 3), sum(Y) / Y.shape[0])
 
     def test_sum_of_column_Test1(self):
-
-        X = np.arange(9).reshape((3,3))
+        X = np.arange(9).reshape((3, 3))
 
         Y = np.sum(X, axis=0)
 
-        self.assertListEqual(Y.tolist(),[9,12,15])
+        self.assertListEqual(Y.tolist(), [9, 12, 15])
+
+    def test_mean_of_column_Test1(self):
+        X = np.arange(9).reshape((3, 3))
+
+        Y = np.mean(X, axis=0)
+
+        self.assertListEqual(Y.tolist(), [3, 4, 5])
