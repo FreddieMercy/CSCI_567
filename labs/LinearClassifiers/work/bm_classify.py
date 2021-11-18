@@ -235,4 +235,4 @@ def multiclass_predict(X, w, b):
 
     preds = np.dot(X, w.T)+b
 
-    return np.array(np.argmax(preds[n]) for n in range[N])
+    return np.array([np.argmax(preds[n]) for n in range(N)])
