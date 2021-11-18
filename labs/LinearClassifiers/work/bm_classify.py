@@ -172,7 +172,19 @@ def multiclass_train(X, y, C,
             # "step_size" to minimize logistic loss. We already#
             # pick the index of the random sample for you (n)  #
             ####################################################			
-        
+            P = np.zeros(C)
+            bot = 1
+
+            for k in range(C):
+                if k != y[n]:
+                    P[k] = np.exp(np.dot(w[k] - w[y[n]], X[n].T))
+                    bot+=P[k]
+
+            P /= bot
+
+            P[y[n]] = -(bot -1)/bot
+
+            w -= step_size*np.dot(P, X[n])
         
 
     elif gd_type == "gd":
