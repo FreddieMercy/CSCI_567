@@ -46,7 +46,12 @@ def binary_train(X, y, loss="perceptron", w0=None, b0=None, step_size=0.5, max_i
 		# derivative of the perceptron loss at 0)      # 
         ################################################
 
-        
+        Y = np.dot(X, w) + b
+        y = np.array([-1 if i == 0 else i for i in y])
+
+        Y = y * Y
+
+        np.mean(np.sum(max(0, y*(X * w + b))))
         
 
     elif loss == "logistic":
