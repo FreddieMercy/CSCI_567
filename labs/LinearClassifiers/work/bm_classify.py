@@ -233,5 +233,7 @@ def multiclass_predict(X, w, b):
     # TODO 7 : predict DETERMINISTICALLY (i.e. do not randomize)#
     #############################################################
 
+    preds = np.dot(X, w.T)+b
+
     assert preds.shape == (N,)
-    return preds
+    return np.array(np.argmax(preds[n]) for n in range[N])
