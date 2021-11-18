@@ -59,6 +59,13 @@ def binary_train(X, y, loss="perceptron", w0=None, b0=None, step_size=0.5, max_i
         # to minimize logistic loss                    # 
         ################################################
 
+        for i in range(max_iterations):
+            Y = np.dot(X, w) + b - y
+            z = Y*Y
+            e_T = np.exp(-1*z)
+
+            w-=step_size*np.mean((2*Y*X*e_T)*sigmoid(z))
+            b-=step_size*np.mean((2*Y*e_T)*sigmoid(z))
         
 
     else:
@@ -81,8 +88,9 @@ def sigmoid(z):
     ############################################
     # TODO 3 : fill in the sigmoid function    #
     ############################################
-    
-    return value
+
+    e_T = np.exp(-1*z)
+    return 1/(1+e_T)
 
 
 def binary_predict(X, w, b):
