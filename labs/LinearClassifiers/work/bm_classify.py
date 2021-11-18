@@ -1,5 +1,6 @@
 import numpy as np
 
+
 #######################################################
 # DO NOT MODIFY ANY CODE OTHER THAN THOSE TODO BLOCKS #
 #######################################################
@@ -29,11 +30,10 @@ def binary_train(X, y, loss="perceptron", w0=None, b0=None, step_size=0.5, max_i
     N, D = X.shape
     assert len(np.unique(y)) == 2
 
-
     w = np.zeros(D)
     if w0 is not None:
         w = w0
-    
+
     b = 0
     if b0 is not None:
         b = b0
@@ -43,13 +43,13 @@ def binary_train(X, y, loss="perceptron", w0=None, b0=None, step_size=0.5, max_i
         # TODO 1 : perform "max_iterations" steps of   #
         # gradient descent with step size "step_size"  #
         # to minimize perceptron loss (use -1 as the   #
-		# derivative of the perceptron loss at 0)      # 
+        # derivative of the perceptron loss at 0)      #
         ################################################
 
         for i in range(max_iterations):
-            Y = 2*(np.dot(X, w) + b-y)
-            w -= step_size*np.mean(mul(X, Y), axis=0)
-            #b = np.mean(y)
+            Y = 2 * (np.dot(X, w) + b - y)
+            w -= step_size * np.mean(mul(X, Y), axis=0)
+            # b = np.mean(y)
 
 
     elif loss == "logistic":
@@ -65,8 +65,8 @@ def binary_train(X, y, loss="perceptron", w0=None, b0=None, step_size=0.5, max_i
             e_T = np.exp(-1 * z)
 
             w -= step_size * np.mean(mul((2 * mul(mul(X, Y), e_T)), sigmoid(z)), axis=0)
-            #b = np.mean((2 * Y * e_T) * sigmoid(z))
-        
+            # b = np.mean((2 * Y * e_T) * sigmoid(z))
+
 
     else:
         raise "Undefined loss function."
@@ -74,11 +74,12 @@ def binary_train(X, y, loss="perceptron", w0=None, b0=None, step_size=0.5, max_i
     assert w.shape == (D,)
     return w, b
 
+
 def mul(X, Y):
-    return np.transpose(X.T*Y)
+    return np.transpose(X.T * Y)
+
 
 def sigmoid(z):
-    
     """
     Inputs:
     - z: a numpy array or a float number
@@ -91,8 +92,8 @@ def sigmoid(z):
     # TODO 3 : fill in the sigmoid function    #
     ############################################
 
-    e_T = np.exp(-1*z)
-    return 1/(1+e_T)
+    e_T = np.exp(-1 * z)
+    return 1 / (1 + e_T)
 
 
 def binary_predict(X, w, b):
@@ -108,21 +109,20 @@ def binary_predict(X, w, b):
     - preds: N-dimensional vector of binary predictions (either 0 or 1)
     """
     N, D = X.shape
-        
+
     #############################################################
     # TODO 4 : predict DETERMINISTICALLY (i.e. do not randomize)#
     #############################################################
-  
 
     Y = np.dot(X, w) + b
     return np.array([1 if Y[i] > 0 else 0 for i in range(N)])
 
 
 def multiclass_train(X, y, C,
-                     w0=None, 
+                     w0=None,
                      b0=None,
                      gd_type="sgd",
-                     step_size=0.5, 
+                     step_size=0.5,
                      max_iterations=1000):
     """
     Inputs:
@@ -156,12 +156,12 @@ def multiclass_train(X, y, C,
     w = np.zeros((C, D))
     if w0 is not None:
         w = w0
-    
+
     b = np.zeros(C)
     if b0 is not None:
         b = b0
 
-    np.random.seed(42) #DO NOT CHANGE THE RANDOM SEED IN YOUR FINAL SUBMISSION
+    np.random.seed(42)  # DO NOT CHANGE THE RANDOM SEED IN YOUR FINAL SUBMISSION
     if gd_type == "sgd":
 
         for it in range(max_iterations):
@@ -173,8 +173,8 @@ def multiclass_train(X, y, C,
             # pick the index of the random sample for you (n)  #
             ####################################################
 
-            w -= step_size*multiclass_each_derivative(C, y[n], w, X[n])
-        
+            w -= step_size * multiclass_each_derivative(C, y[n], w, X[n])
+
 
     elif gd_type == "gd":
         ####################################################
@@ -182,17 +182,22 @@ def multiclass_train(X, y, C,
         # gradient descent with step size "step_size"      #
         # to minimize logistic loss.                       #
         ####################################################
+        upd = np.zeros((C, D))
+        for n in range(N):
+            upd += multiclass_each_derivative(C, y[n], w, X[n])
 
-        
+        upd /= N
+
+        w -= step_size * upd
 
     else:
         raise "Undefined algorithm."
-    
 
     assert w.shape == (C, D)
     assert b.shape == (C,)
 
     return w, b
+
 
 def multiclass_each_derivative(C, y, w, x):
     P = np.zeros(C)
@@ -208,6 +213,7 @@ def multiclass_each_derivative(C, y, w, x):
     P[y] = -(bot - 1) / bot
 
     return np.dot(P, x)
+
 
 def multiclass_predict(X, w, b):
     """
@@ -227,11 +233,5 @@ def multiclass_predict(X, w, b):
     # TODO 7 : predict DETERMINISTICALLY (i.e. do not randomize)#
     #############################################################
 
-    
     assert preds.shape == (N,)
     return preds
-
-
-
-
-        
