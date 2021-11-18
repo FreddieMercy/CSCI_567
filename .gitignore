@@ -52,4 +52,4 @@ __pycache__/
 
 .ipynb_checkpoints/
 
-binary.out
+*.out
