@@ -171,20 +171,9 @@ def multiclass_train(X, y, C,
             # stochastic gradient descent with step size       #
             # "step_size" to minimize logistic loss. We already#
             # pick the index of the random sample for you (n)  #
-            ####################################################			
-            P = np.zeros(C)
-            bot = 1
+            ####################################################
 
-            for k in range(C):
-                if k != y[n]:
-                    P[k] = np.exp(np.dot(w[k] - w[y[n]], X[n].T))
-                    bot+=P[k]
-
-            P /= bot
-
-            P[y[n]] = -(bot -1)/bot
-
-            w -= step_size*np.dot(P, X[n])
+            w -= step_size*multiclass_each_derivative(C, y[n], w, X[n])
         
 
     elif gd_type == "gd":
@@ -193,7 +182,7 @@ def multiclass_train(X, y, C,
         # gradient descent with step size "step_size"      #
         # to minimize logistic loss.                       #
         ####################################################
-        
+
         
 
     else:
@@ -205,6 +194,20 @@ def multiclass_train(X, y, C,
 
     return w, b
 
+def multiclass_each_derivative(C, y, w, x):
+    P = np.zeros(C)
+    bot = 1
+
+    for k in range(C):
+        if k != y:
+            P[k] = np.exp(np.dot(w[k] - w[y], x.T))
+            bot += P[k]
+
+    P /= bot
+
+    P[y] = -(bot - 1) / bot
+
+    return np.dot(P, x)
 
 def multiclass_predict(X, w, b):
     """
