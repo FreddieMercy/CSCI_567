@@ -59,12 +59,8 @@ class test_KNN_Tests(TestUtilities):
         w = np.array([1, -1, 0])
         b = 100
 
-        Y = np.dot(X, w) + b
+        y = np.array([1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1])/10
 
-        y = np.array([1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1])
+        Y = np.dot(X, w) + b-y
 
-        y = np.array([-1 if i == 0 else i for i in y])
-
-        tmp = max(0, y*Y)
-
-        print()
+        self.assertEqual(round(np.mean(Y), 3), sum(Y)/Y.shape[0])
