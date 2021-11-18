@@ -50,22 +50,22 @@ def binary_train(X, y, loss="perceptron", w0=None, b0=None, step_size=0.5, max_i
             Y = 2*(np.dot(X, w) + b-y)
             w -= step_size*np.mean(mul(X, Y), axis=0)
             b -= step_size*np.mean(Y)
-        
+
 
     elif loss == "logistic":
         ################################################
         # TODO 2 : perform "max_iterations" steps of   #
         # gradient descent with step size "step_size"  #
-        # to minimize logistic loss                    # 
+        # to minimize logistic loss                    #
         ################################################
 
         for i in range(max_iterations):
             Y = np.dot(X, w) + b - y
-            z = Y*Y
-            e_T = np.exp(-1*z)
+            z = Y * Y
+            e_T = np.exp(-1 * z)
 
-            w-=step_size*np.mean((2*Y*X*e_T)*sigmoid(z))
-            b-=step_size*np.mean((2*Y*e_T)*sigmoid(z))
+            w -= step_size * np.mean(mul((2 * mul(mul(X, Y), e_T)), sigmoid(z)), axis=0)
+            b -= step_size * np.mean((2 * Y * e_T) * sigmoid(z))
         
 
     else:
