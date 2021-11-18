@@ -64,3 +64,11 @@ class test_KNN_Tests(TestUtilities):
         Y = np.dot(X, w) + b-y
 
         self.assertEqual(round(np.mean(Y), 3), sum(Y)/Y.shape[0])
+
+    def test_sum_of_column_Test1(self):
+
+        X = np.arange(9).reshape((3,3))
+
+        Y = np.sum(X, axis=0)
+
+        self.assertListEqual(Y.tolist(),[9,12,15])
