@@ -48,7 +48,7 @@ def binary_train(X, y, loss="perceptron", w0=None, b0=None, step_size=0.5, max_i
 
         for i in range(max_iterations):
             Y = 2*(np.dot(X, w) + b-y)
-            w -= step_size*np.mean(np.transpose(X.T*Y), axis=0)
+            w -= step_size*np.mean(mul(X, Y), axis=0)
             b -= step_size*np.mean(Y)
         
 
@@ -74,6 +74,8 @@ def binary_train(X, y, loss="perceptron", w0=None, b0=None, step_size=0.5, max_i
     assert w.shape == (D,)
     return w, b
 
+def mul(X, Y):
+    return np.transpose(X.T*Y)
 
 def sigmoid(z):
     
