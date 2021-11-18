@@ -112,8 +112,8 @@ def binary_predict(X, w, b):
     #############################################################
   
 
-    assert preds.shape == (N,) 
-    return preds
+    Y = np.dot(X, w) + b
+    return np.array([1 if Y[i] > 0 else 0 for i in range(N)])
 
 
 def multiclass_train(X, y, C,
