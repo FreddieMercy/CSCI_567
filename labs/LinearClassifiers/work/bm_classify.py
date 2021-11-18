@@ -235,5 +235,4 @@ def multiclass_predict(X, w, b):
 
     preds = np.dot(X, w.T)+b
 
-    assert preds.shape == (N,)
     return np.array(np.argmax(preds[n]) for n in range[N])
