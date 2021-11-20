@@ -53,7 +53,6 @@ def binary_train(X, y, loss="perceptron", w0=None, b0=None, step_size=0.5, max_i
             w -= step_size * np.mean(Y.reshape(-1, 1) * X, axis=0)
             b = np.mean(Y)
 
-
     elif loss == "logistic":
         ################################################
         # TODO 2 : perform "max_iterations" steps of   #
@@ -66,19 +65,14 @@ def binary_train(X, y, loss="perceptron", w0=None, b0=None, step_size=0.5, max_i
             e_T = np.exp(-1 * z)
             Y = -1 * e_T * sigmoid(z)
 
-            w -= step_size * np.mean(mul(X, Y), axis=0)
+            w -= step_size * np.mean(Y.reshape(-1, 1) * X, axis=0)
             b = np.mean(y - np.dot(X, w))
-
 
     else:
         raise "Undefined loss function."
 
     assert w.shape == (D,)
     return w, b
-
-
-def mul(X, Y):
-    return np.transpose(X.T * Y)
 
 
 def sigmoid(z):
