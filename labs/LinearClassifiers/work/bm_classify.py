@@ -47,9 +47,14 @@ def binary_train(X, y, loss="perceptron", w0=None, b0=None, step_size=0.5, max_i
         ################################################
 
         for i in range(max_iterations):
-            Y = 2 * (np.dot(X, w) + b - y)
+            # Y = 2 * (np.dot(X, w) + b - y)
+            # w -= step_size * np.mean(mul(X, Y), axis=0)
+            # # b = np.mean(y)
+
+            Y = np.dot(X, w) + b - y
+            Y = np.array([np.array(1 if Y[n] > -1 else 0) for n in range(N)])
             w -= step_size * np.mean(mul(X, Y), axis=0)
-            # b = np.mean(y)
+            # b = np.mean(y-np.dot(X, w))
 
 
     elif loss == "logistic":
