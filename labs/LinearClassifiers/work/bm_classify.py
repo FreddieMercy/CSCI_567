@@ -47,14 +47,11 @@ def binary_train(X, y, loss="perceptron", w0=None, b0=None, step_size=0.5, max_i
         ################################################
 
         for i in range(max_iterations):
-            # Y = 2 * (np.dot(X, w) + b - y)
-            # w -= step_size * np.mean(mul(X, Y), axis=0)
-            # # b = np.mean(y)
-
             Y = np.dot(X, w) + b - y
-            Y = np.array([np.array(1 if Y[n] > -1 else 0) for n in range(N)])
+            mask = np.where(y == 0, -1, 1)
+            Y = np.where((Y * mask) <= 0, -1, 0) * mask
             w -= step_size * np.mean(mul(X, Y), axis=0)
-            # b = np.mean(y-np.dot(X, w))
+            b = np.mean(Y)
 
 
     elif loss == "logistic":
@@ -65,12 +62,12 @@ def binary_train(X, y, loss="perceptron", w0=None, b0=None, step_size=0.5, max_i
         ################################################
 
         for i in range(max_iterations):
-            Y = np.dot(X, w) + b - y
-            z = Y * Y
+            z = np.dot(X, w) + b - y
             e_T = np.exp(-1 * z)
+            Y = -1 * e_T * sigmoid(z)
 
-            w -= step_size * np.mean(mul((2 * mul(mul(X, Y), e_T)), sigmoid(z)), axis=0)
-            # b = np.mean((2 * Y * e_T) * sigmoid(z))
+            w -= step_size * np.mean(mul(X, Y), axis=0)
+            b = np.mean(y - np.dot(X, w))
 
 
     else:
@@ -217,7 +214,7 @@ def multiclass_each_derivative(C, y, w, x):
 
     P[y] = -(bot - 1) / bot
 
-    return P.reshape(-1, 1)*x
+    return P.reshape(-1, 1) * x
 
 
 def multiclass_predict(X, w, b):
@@ -238,6 +235,6 @@ def multiclass_predict(X, w, b):
     # TODO 7 : predict DETERMINISTICALLY (i.e. do not randomize)#
     #############################################################
 
-    preds = np.dot(X, w.T)+b
+    preds = np.dot(X, w.T) + b
 
     return np.array([np.argmax(preds[n]) for n in range(N)])
