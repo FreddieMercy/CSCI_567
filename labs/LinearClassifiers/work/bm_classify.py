@@ -50,7 +50,7 @@ def binary_train(X, y, loss="perceptron", w0=None, b0=None, step_size=0.5, max_i
             Y = np.dot(X, w) + b - y
             mask = np.where(y == 0, -1, 1)
             Y = np.where((Y * mask) <= 0, -1, 0) * mask
-            w -= step_size * np.mean(mul(X, Y), axis=0)
+            w -= step_size * np.mean(Y.reshape(-1, 1) * X, axis=0)
             b = np.mean(Y)
 
 
