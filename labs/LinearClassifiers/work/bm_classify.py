@@ -61,12 +61,14 @@ def binary_train(X, y, loss="perceptron", w0=None, b0=None, step_size=0.5, max_i
         ################################################
 
         for i in range(max_iterations):
-            z = np.dot(X, w) + b - y
+            Y = np.dot(X, w) + b - y
+            mask = np.where(y == 0, -1, 1)
+            z = Y*mask
             e_T = np.exp(-1 * z)
-            Y = -1 * e_T * sigmoid(z)
+            Y = -1 * e_T * sigmoid(z)*mask
 
             w -= step_size * np.mean(Y.reshape(-1, 1) * X, axis=0)
-            b = np.mean(y - np.dot(X, w))
+            b = np.mean(Y)
 
     else:
         raise "Undefined loss function."
