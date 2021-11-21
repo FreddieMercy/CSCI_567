@@ -63,9 +63,9 @@ def binary_train(X, y, loss="perceptron", w0=None, b0=None, step_size=0.5, max_i
         for i in range(max_iterations):
             Y = np.dot(X, w) + b - y
             mask = np.where(y == 0, -1, 1)
-            z = Y*mask
+            z = Y * mask
             e_T = np.exp(-1 * z)
-            Y = -1 * e_T * sigmoid(z)*mask
+            Y = -1 * e_T * sigmoid(z) * mask
 
             w -= step_size * np.mean(Y.reshape(-1, 1) * X, axis=0)
             b = np.mean(Y)
@@ -170,10 +170,11 @@ def multiclass_train(X, y, C,
             # "step_size" to minimize logistic loss. We already#
             # pick the index of the random sample for you (n)  #
             ####################################################
-
-            b = multiclass_each_derivative(C, y[n], w, X[n], b)
+            y_neg = np.eye(C)[y[n]]
+            z = np.dot(w, X[n].T) + b
+            Y = np.exp(z - np.max(z))
+            b = Y / np.sum(Y) - y_neg
             w -= step_size * (b.reshape(-1, 1) * X[n].reshape(1, -1))
-
 
     elif gd_type == "gd":
         ####################################################
@@ -181,13 +182,12 @@ def multiclass_train(X, y, C,
         # gradient descent with step size "step_size"      #
         # to minimize logistic loss.                       #
         ####################################################
-        upd = np.zeros((C, D))
-        for n in range(N):
-            upd += multiclass_each_derivative(C, y[n], w, X[n], b)
-
-        upd /= N
-
-        w -= step_size * upd
+        y_neg = np.eye(C)[y]
+        z = np.dot(w, X.T) + b.reshape(-1, 1)
+        Y = np.exp(z - np.max(z, axis=0))
+        Y = (Y / np.sum(Y, axis=0)).T - y_neg
+        w -= step_size * (np.dot(Y.T, X) / N)
+        b -= step_size * np.mean(Y, axis=0)
 
     else:
         raise "Undefined algorithm."
@@ -196,13 +196,6 @@ def multiclass_train(X, y, C,
     assert b.shape == (C,)
 
     return w, b
-
-
-def multiclass_each_derivative(C, y, w, x, b):
-    y_neg = np.eye(C)[y]
-    z = np.dot(w, x.T) + b
-    Y = np.exp(z - np.max(z))
-    return Y / np.sum(Y) - y_neg
 
 
 def multiclass_predict(X, w, b):
