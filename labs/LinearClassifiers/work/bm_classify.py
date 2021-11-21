@@ -47,7 +47,7 @@ def binary_train(X, y, loss="perceptron", w0=None, b0=None, step_size=0.5, max_i
         ################################################
 
         for i in range(max_iterations):
-            Y = np.dot(X, w) + b - y
+            Y = np.dot(X, w) + b
             mask = np.where(y == 0, -1, 1)
             Y = np.where((Y * mask) <= 0, -1, 0) * mask
             w -= step_size * np.mean(Y.reshape(-1, 1) * X, axis=0)
@@ -61,7 +61,7 @@ def binary_train(X, y, loss="perceptron", w0=None, b0=None, step_size=0.5, max_i
         ################################################
 
         for i in range(max_iterations):
-            Y = np.dot(X, w) + b - y
+            Y = np.dot(X, w) + b
             mask = np.where(y == 0, -1, 1)
             z = Y * mask
             e_T = np.exp(-1 * z)
