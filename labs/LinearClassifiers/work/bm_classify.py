@@ -51,7 +51,7 @@ def binary_train(X, y, loss="perceptron", w0=None, b0=None, step_size=0.5, max_i
             mask = np.where(y == 0, -1, 1)
             Y = np.where((Y * mask) <= 0, -1, 0) * mask
             w -= step_size * np.mean(Y.reshape(-1, 1) * X, axis=0)
-            b = np.mean(Y)
+            b -= step_size * np.mean(Y)
 
     elif loss == "logistic":
         ################################################
@@ -68,7 +68,7 @@ def binary_train(X, y, loss="perceptron", w0=None, b0=None, step_size=0.5, max_i
             Y = -1 * e_T * sigmoid(z) * mask
 
             w -= step_size * np.mean(Y.reshape(-1, 1) * X, axis=0)
-            b = np.mean(Y)
+            b -= step_size * np.mean(Y)
 
     else:
         raise "Undefined loss function."
