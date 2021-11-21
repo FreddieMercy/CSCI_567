@@ -171,7 +171,8 @@ def multiclass_train(X, y, C,
             # pick the index of the random sample for you (n)  #
             ####################################################
 
-            w -= step_size * multiclass_each_derivative(C, y[n], w, X[n])
+            b = multiclass_each_derivative(C, y[n], w, X[n], b)
+            w -= step_size * (b.reshape(-1, 1) * X[n].reshape(1, -1))
 
 
     elif gd_type == "gd":
@@ -182,7 +183,7 @@ def multiclass_train(X, y, C,
         ####################################################
         upd = np.zeros((C, D))
         for n in range(N):
-            upd += multiclass_each_derivative(C, y[n], w, X[n])
+            upd += multiclass_each_derivative(C, y[n], w, X[n], b)
 
         upd /= N
 
@@ -197,20 +198,11 @@ def multiclass_train(X, y, C,
     return w, b
 
 
-def multiclass_each_derivative(C, y, w, x):
-    P = np.zeros(C)
-    bot = 1
-
-    for k in range(C):
-        if k != y:
-            P[k] = np.exp(np.dot(w[k] - w[y], x.T))
-            bot += P[k]
-
-    P /= bot
-
-    P[y] = -(bot - 1) / bot
-
-    return P.reshape(-1, 1) * x
+def multiclass_each_derivative(C, y, w, x, b):
+    y_neg = np.eye(C)[y]
+    z = np.dot(w, x.T) + b
+    Y = np.exp(z - np.max(z))
+    return Y / np.sum(Y) - y_neg
 
 
 def multiclass_predict(X, w, b):
