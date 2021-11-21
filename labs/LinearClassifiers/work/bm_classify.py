@@ -173,8 +173,9 @@ def multiclass_train(X, y, C,
             y_neg = np.eye(C)[y[n]]
             z = np.dot(w, X[n].T) + b
             Y = np.exp(z - np.max(z))
-            b = Y / np.sum(Y) - y_neg
-            w -= step_size * (b.reshape(-1, 1) * X[n].reshape(1, -1))
+            Y = Y / np.sum(Y) - y_neg
+            w -= step_size * (Y.reshape(-1, 1) * X[n].reshape(1, -1))
+            b -= step_size * Y
 
     elif gd_type == "gd":
         ####################################################
@@ -182,12 +183,13 @@ def multiclass_train(X, y, C,
         # gradient descent with step size "step_size"      #
         # to minimize logistic loss.                       #
         ####################################################
-        y_neg = np.eye(C)[y]
-        z = np.dot(w, X.T) + b.reshape(-1, 1)
-        Y = np.exp(z - np.max(z, axis=0))
-        Y = (Y / np.sum(Y, axis=0)).T - y_neg
-        w -= step_size * (np.dot(Y.T, X) / N)
-        b -= step_size * np.mean(Y, axis=0)
+        for it in range(max_iterations):
+            y_neg = np.eye(C)[y]
+            z = np.dot(w, X.T) + b.reshape(-1, 1)
+            Y = np.exp(z - np.max(z, axis=0))
+            Y = (Y / np.sum(Y, axis=0)).T - y_neg
+            w -= step_size * (np.dot(Y.T, X) / N)
+            b -= step_size * np.mean(Y, axis=0)
 
     else:
         raise "Undefined algorithm."
