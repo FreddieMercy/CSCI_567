@@ -160,7 +160,7 @@ class KMeansClassifier():
         # - assign labels to centroid_labels
         ################################################################
 
-        K_means = KMeans(len(x), self.n_cluster, x, self.generator)
+        K_means = KMeans(n_cluster=self.n_cluster, max_iter=self.max_iter, e=self.e, generator=self.generator)
         centroids, membership, _ = K_means.fit(x, centroid_func)
         votes = np.array([np.zeros(self.n_cluster) for i in range(self.n_cluster)])
 
