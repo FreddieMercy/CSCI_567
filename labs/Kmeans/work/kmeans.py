@@ -224,3 +224,9 @@ def transform_image(image, code_vectors):
     # TODO
     # - replace each pixel (a 3-dimensional point) by its nearest code vector
     ##############################################################################
+
+    for row in range(image.shape[0]):
+        for col in range(image.shape[1]):
+            image[row][col] = code_vectors[np.argmin(square_element_wise(code_vectors - image[row][col]))]
+
+    return image
