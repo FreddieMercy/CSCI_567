@@ -91,13 +91,12 @@ class KMeans():
         Y = np.argmin(np.sum(((x - np.expand_dims(centers, axis=1)) ** 2), axis=2), axis=0)
 
         for i in range(self.max_iter):
-            local_distortion = np.sum([np.sum(np.square(x[Y == k]-centers[k])) for k in range(self.n_cluster)])/x.shape[0]
+            local_distortion = np.sum([np.sum(np.square(x[Y == k] - centers[k])) for k in range(self.n_cluster)]) / \
+                               x.shape[0]
             if abs(distortion - local_distortion) <= self.e:
                 return centers, Y, i
 
-            new_centroids = np.array([np.mean(x[Y == k], axis=0) for k in range(self.n_cluster)])
-            new_centroids[np.where(np.isnan(new_centroids))] = centers[np.where(np.isnan(new_centroids))]
-            centers = new_centroids
+            centers = np.array([np.mean(x[Y == k], axis=0) if len(x[Y == k]) else centers[k] for k in range(self.n_cluster)])
 
             Y = np.argmin(np.sum(((x - np.expand_dims(centers, axis=1)) ** 2), axis=2), axis=0)
 
@@ -187,7 +186,8 @@ class KMeansClassifier():
         #    dataset (self.centroids, self.centroid_labels)
         ##########################################################################
 
-        return self.centroid_labels[np.argmin(np.sum(((x - np.expand_dims(self.centroids, axis=1)) ** 2), axis=2), axis=0)]
+        return self.centroid_labels[
+            np.argmin(np.sum(((x - np.expand_dims(self.centroids, axis=1)) ** 2), axis=2), axis=0)]
 
 
 def transform_image(image, code_vectors):
@@ -213,4 +213,6 @@ def transform_image(image, code_vectors):
 
     row, col, size = image.shape
 
-    return code_vectors[np.argmin(np.sum(((image.reshape(row * col, size) - np.expand_dims(code_vectors, axis=1)) ** 2), axis=2), axis=0)].reshape(row, col, size)
+    return code_vectors[
+        np.argmin(np.sum(((image.reshape(row * col, size) - np.expand_dims(code_vectors, axis=1)) ** 2), axis=2),
+                  axis=0)].reshape(row, col, size)
