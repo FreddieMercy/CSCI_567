@@ -53,3 +53,4 @@ __pycache__/
 .ipynb_checkpoints/
 
 *.out
+**.png
