@@ -162,7 +162,7 @@ class KMeansClassifier():
 
         K_means = centroid_func(len(x), self.n_cluster, x, self.generator)
         centroids, membership, _ = K_means.fit(x)
-        votes = np.array([np.array([0 for i in range(self.n_cluster)]) for k in range(self.n_cluster)])
+        votes = np.array([np.zeros(self.n_cluster) for i in range(self.n_cluster)])
 
         for predict, actual in zip(membership, y):
             votes[predict][actual] += 1
