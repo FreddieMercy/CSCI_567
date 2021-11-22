@@ -29,11 +29,10 @@ def get_k_means_plus_plus_center_indices(N, n_cluster, X, generator=np.random):
     # 1 using generator.rand(), then find the the smallest index n so that the
     # cumulative probability from example 1 to example n is larger than r.
     #############################################################################
-    assert N != len(X)
 
     centers = [p]
 
-    for i in range(n_cluster):
+    for i in range(n_cluster - 1):
         mu = []
         for n in range(N):
             if not n in centers:
@@ -90,6 +89,31 @@ class KMeans():
         #   or until you have made self.max_iter updates.
         ###################################################################
 
+        def square_element_wise(matrix):
+            return [dot_product_square_of_self(i) for i in matrix]
+
+        def calc_distortion_objective(X, centers):
+            return np.mean([np.min(square_element_wise(centers-X[n])) for n in range(N)])
+
+        distortion = 0
+        centroids = np.array([x[n] for n in self.centers])
+        Y = np.array([np.argmin(square_element_wise(centroids-x[n])) for n in range(N)])
+
+        for i in range(self.max_iter):
+            local_distortion = calc_distortion_objective(x, centroids)
+            if abs(distortion - local_distortion) <= self.e:
+                return centroids, Y, i
+
+            group_by_k = {}
+            for n in range(N):
+                group_by_k.get(Y[n], []).append(x[n])
+
+            for k, items in group_by_k.items():
+                centroids[k] = np.mean(np.array(items), axis=1)
+
+            Y = np.array([np.argmin(square_element_wise(centroids - x[n])) for n in range(N)])
+
+        return centroids, Y, self.max_iter
 
 class KMeansClassifier():
     '''
