@@ -5,6 +5,10 @@ import numpy as np
 # DO NOT IMPORT OHTER LIBRARIES
 #################################
 
+def dot_product_square_of_self(self):
+    return np.dot(self, self.T)
+
+
 def get_k_means_plus_plus_center_indices(N, n_cluster, X, generator=np.random):
     '''
 
@@ -35,8 +39,7 @@ def get_k_means_plus_plus_center_indices(N, n_cluster, X, generator=np.random):
             if not n in centers:
                 ds = []
                 for point in centers:
-                    tmp = X[n] - X[point]
-                    ds.append(np.dot(tmp, tmp.T))
+                    ds.append(dot_product_square_of_self(X[n] - X[point]))
                 mu.append(min(ds))
             else:
                 mu.append(-1)
