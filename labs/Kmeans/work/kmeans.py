@@ -83,6 +83,7 @@ class KMeans():
         N, D = x.shape
 
         self.centers = centroid_func(len(x), self.n_cluster, x, self.generator)
+
         ###################################################################
         # TODO: Update means and membership until convergence 
         #   (i.e., average K-mean objective changes less than self.e)
@@ -93,11 +94,11 @@ class KMeans():
             return [dot_product_square_of_self(i) for i in matrix]
 
         def calc_distortion_objective(X, centers):
-            return np.mean([np.min(square_element_wise(centers-X[n])) for n in range(N)])
+            return np.mean([np.min(square_element_wise(centers - X[n])) for n in range(N)])
 
         distortion = 0
         centroids = np.array([x[n] for n in self.centers])
-        Y = np.array([np.argmin(square_element_wise(centroids-x[n])) for n in range(N)])
+        Y = np.array([np.argmin(square_element_wise(centroids - x[n])) for n in range(N)])
 
         for i in range(self.max_iter):
             local_distortion = calc_distortion_objective(x, centroids)
@@ -114,6 +115,7 @@ class KMeans():
             Y = np.array([np.argmin(square_element_wise(centroids - x[n])) for n in range(N)])
 
         return centroids, Y, self.max_iter
+
 
 class KMeansClassifier():
     '''
