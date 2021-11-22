@@ -27,18 +27,16 @@ def get_k_means_plus_plus_center_indices(N, n_cluster, X, generator=np.random):
     #############################################################################
 
     centers = [p]
-
-    for i in range(n_cluster - 1):
-        mu = []
-        for n in range(N):
-            if not n in centers:
-                ds = []
-                for point in centers:
-                    ds.append(np.sum(np.square(X[n] - X[point])))
-                mu.append(min(ds))
-            else:
-                mu.append(-1)
-        centers.append(np.argmax(np.array(mu)))
+    for _ in range(n_cluster):
+        w = np.array([min([np.sum(np.square(X[k] - X[i])) for k in centers]) for i in range(N)])
+        w /= np.sum(w)
+        q = generator.rand()
+        total = 0
+        centroid = -1
+        while total < q:
+            centroid += 1
+            total += w[centroid]
+        centers.append(centroid)
     # DO NOT CHANGE CODE BELOW THIS LINE
     return centers
 
