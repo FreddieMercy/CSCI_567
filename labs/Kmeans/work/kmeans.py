@@ -5,14 +5,6 @@ import numpy as np
 # DO NOT IMPORT OHTER LIBRARIES
 #################################
 
-def dot_product_square_of_self(self):
-    return np.dot(self, self.T)
-
-
-def square_element_wise(matrix):
-    return [dot_product_square_of_self(i) for i in matrix]
-
-
 def get_k_means_plus_plus_center_indices(N, n_cluster, X, generator=np.random):
     '''
 
@@ -42,7 +34,7 @@ def get_k_means_plus_plus_center_indices(N, n_cluster, X, generator=np.random):
             if not n in centers:
                 ds = []
                 for point in centers:
-                    ds.append(dot_product_square_of_self(X[n] - X[point]))
+                    ds.append(np.sum(np.square(X[n] - X[point])))
                 mu.append(min(ds))
             else:
                 mu.append(-1)
@@ -78,8 +70,8 @@ class KMeans():
                 x - N X D numpy array
             returns:
                 A tuple in the following order:
-                  - final centroids, a n_cluster X D numpy array, 
-                  - a length (N,) numpy array where cell i is the ith sample's assigned cluster's index (start from 0), 
+                  - final centroids, a n_cluster X D numpy array,
+                  - a length (N,) numpy array where cell i is the ith sample's assigned cluster's index (start from 0),
                   - number of times you update the assignment, an Int (at most self.max_iter)
         '''
         assert len(x.shape) == 2, "fit function takes 2-D numpy arrays as input"
@@ -89,33 +81,27 @@ class KMeans():
         self.centers = centroid_func(len(x), self.n_cluster, x, self.generator)
 
         ###################################################################
-        # TODO: Update means and membership until convergence 
+        # TODO: Update means and membership until convergence
         #   (i.e., average K-mean objective changes less than self.e)
         #   or until you have made self.max_iter updates.
         ###################################################################
 
-        def calc_distortion_objective(X, centers):
-            return np.mean([np.min(square_element_wise(centers - X[n])) for n in range(N)])
-
         distortion = 0
-        centroids = np.array([x[n] for n in self.centers])
-        Y = np.array([np.argmin(square_element_wise(centroids - x[n])) for n in range(N)])
+        centers = np.array([x[n] for n in self.centers])
+        Y = np.argmin(np.sum(((x - np.expand_dims(centers, axis=1)) ** 2), axis=2), axis=0)
 
         for i in range(self.max_iter):
-            local_distortion = calc_distortion_objective(x, centroids)
+            local_distortion = np.sum([np.sum(np.square(x[Y == k]-centers[k])) for k in range(self.n_cluster)])/x.shape[0]
             if abs(distortion - local_distortion) <= self.e:
-                return centroids, Y, i
+                return centers, Y, i
 
-            group_by_k = {}
-            for n in range(N):
-                group_by_k.get(Y[n], []).append(x[n])
+            new_centroids = np.array([np.mean(x[Y == k], axis=0) for k in range(self.n_cluster)])
+            new_centroids[np.where(np.isnan(new_centroids))] = centers[np.where(np.isnan(new_centroids))]
+            centers = new_centroids
 
-            for k, items in group_by_k.items():
-                centroids[k] = np.mean(np.array(items), axis=1)
+            Y = np.argmin(np.sum(((x - np.expand_dims(centers, axis=1)) ** 2), axis=2), axis=0)
 
-            Y = np.array([np.argmin(square_element_wise(centroids - x[n])) for n in range(N)])
-
-        return centroids, Y, self.max_iter
+        return centers, Y, self.max_iter
 
 
 class KMeansClassifier():
@@ -201,7 +187,7 @@ class KMeansClassifier():
         #    dataset (self.centroids, self.centroid_labels)
         ##########################################################################
 
-        return np.array([self.centroid_labels[np.argmin(square_element_wise(self.centroids - x[n]))] for n in range(N)])
+        return self.centroid_labels[np.argmin(np.sum(((x - np.expand_dims(self.centroids, axis=1)) ** 2), axis=2), axis=0)]
 
 
 def transform_image(image, code_vectors):
@@ -225,8 +211,6 @@ def transform_image(image, code_vectors):
     # - replace each pixel (a 3-dimensional point) by its nearest code vector
     ##############################################################################
 
-    for row in range(image.shape[0]):
-        for col in range(image.shape[1]):
-            image[row][col] = code_vectors[np.argmin(square_element_wise(code_vectors - image[row][col]))]
+    row, col, size = image.shape
 
-    return image
+    return code_vectors[np.argmin(np.sum(((image.reshape(row * col, size) - np.expand_dims(code_vectors, axis=1)) ** 2), axis=2), axis=0)].reshape(row, col, size)
