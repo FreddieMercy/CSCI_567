@@ -9,6 +9,10 @@ def dot_product_square_of_self(self):
     return np.dot(self, self.T)
 
 
+def square_element_wise(matrix):
+    return [dot_product_square_of_self(i) for i in matrix]
+
+
 def get_k_means_plus_plus_center_indices(N, n_cluster, X, generator=np.random):
     '''
 
@@ -89,9 +93,6 @@ class KMeans():
         #   (i.e., average K-mean objective changes less than self.e)
         #   or until you have made self.max_iter updates.
         ###################################################################
-
-        def square_element_wise(matrix):
-            return [dot_product_square_of_self(i) for i in matrix]
 
         def calc_distortion_objective(X, centers):
             return np.mean([np.min(square_element_wise(centers - X[n])) for n in range(N)])
@@ -187,6 +188,8 @@ class KMeansClassifier():
         # - for each example in x, predict its label using 1-NN on the stored 
         #    dataset (self.centroids, self.centroid_labels)
         ##########################################################################
+
+        return np.array([self.centroid_labels[np.argmin(square_element_wise(self.centroids - x[n]))] for n in range(N)])
 
 
 def transform_image(image, code_vectors):
