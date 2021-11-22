@@ -1,10 +1,11 @@
 import numpy as np
 
+
 #################################
 # DO NOT IMPORT OHTER LIBRARIES
 #################################
 
-def get_k_means_plus_plus_center_indices(n, n_cluster, x, generator=np.random):
+def get_k_means_plus_plus_center_indices(N, n_cluster, X, generator=np.random):
     '''
 
     :param n: number of samples in the data
@@ -17,15 +18,29 @@ def get_k_means_plus_plus_center_indices(n, n_cluster, x, generator=np.random):
     :return: a list of length n_clusters with each entry being the *index* of a sample
              chosen as centroid.
     '''
-    p = generator.randint(0, n) #this is the index of the first center
+    p = generator.randint(0, N)  # this is the index of the first center
     #############################################################################
     # TODO: implement the rest of Kmeans++ initialization. To sample an example
-	# according to some distribution, first generate a random number between 0 and
-	# 1 using generator.rand(), then find the the smallest index n so that the 
-	# cumulative probability from example 1 to example n is larger than r.
+    # according to some distribution, first generate a random number between 0 and
+    # 1 using generator.rand(), then find the the smallest index n so that the
+    # cumulative probability from example 1 to example n is larger than r.
     #############################################################################
-    
+    assert N != len(X)
 
+    centers = [p]
+
+    for i in range(n_cluster):
+        mu = []
+        for n in range(N):
+            if not n in centers:
+                ds = []
+                for point in centers:
+                    tmp = X[n] - X[point]
+                    ds.append(np.dot(tmp, tmp.T))
+                mu.append(min(ds))
+            else:
+                mu.append(-1)
+        centers.append(np.argmax(np.array(mu)))
     # DO NOT CHANGE CODE BELOW THIS LINE
     return centers
 
@@ -35,9 +50,7 @@ def get_lloyd_k_means(n, n_cluster, x, generator):
     return generator.choice(n, size=n_cluster)
 
 
-
 class KMeans():
-
     '''
         Class KMeans:
         Attr:
@@ -45,6 +58,7 @@ class KMeans():
             max_iter - maximum updates for kmeans clustering (Int)
             e - error tolerance (Float)
     '''
+
     def __init__(self, n_cluster, max_iter=100, e=0.0001, generator=np.random):
         self.n_cluster = n_cluster
         self.max_iter = max_iter
@@ -52,7 +66,6 @@ class KMeans():
         self.generator = generator
 
     def fit(self, x, centroid_func=get_lloyd_k_means):
-
         '''
             Finds n_cluster in the data x
             params:
@@ -74,11 +87,8 @@ class KMeans():
         #   or until you have made self.max_iter updates.
         ###################################################################
 
-        
-
 
 class KMeansClassifier():
-
     '''
         Class KMeansClassifier:
         Attr:
@@ -92,7 +102,6 @@ class KMeansClassifier():
         self.max_iter = max_iter
         self.e = e
         self.generator = generator
-
 
     def fit(self, x, y, centroid_func=get_lloyd_k_means):
         '''
@@ -121,7 +130,6 @@ class KMeansClassifier():
         # - assign labels to centroid_labels
         ################################################################
 
-        
         # DO NOT CHANGE CODE BELOW THIS LINE
         self.centroid_labels = centroid_labels
         self.centroids = centroids
@@ -150,9 +158,6 @@ class KMeansClassifier():
         # - for each example in x, predict its label using 1-NN on the stored 
         #    dataset (self.centroids, self.centroid_labels)
         ##########################################################################
-        
-
-
 
 
 def transform_image(image, code_vectors):
@@ -175,4 +180,3 @@ def transform_image(image, code_vectors):
     # TODO
     # - replace each pixel (a 3-dimensional point) by its nearest code vector
     ##############################################################################
-    
