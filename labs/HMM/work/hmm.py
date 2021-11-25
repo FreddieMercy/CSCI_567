@@ -36,12 +36,12 @@ class HMM:
         # TODO: compute and return the forward messages alpha
         ######################################################
 
-        for i in range(L):
-            if i == 0:
+        for t in range(L):
+            if t == 0:
                 alpha[:0] = (self.pi * self.B[:0].T).T
             else:
                 for s in range(S):
-                    alpha[s][i] = self.B[s][i] * np.sum(alpha[:i - 1] * self.A[:s])
+                    alpha[s][t] = self.B[s][t] * np.sum(alpha[:t - 1] * self.A[:s])
 
         return alpha
 
@@ -61,6 +61,10 @@ class HMM:
         #######################################################
         # TODO: compute and return the backward messages beta
         #######################################################
+
+
+
+        return beta
 
     def sequence_prob(self, Osequence):
         """
