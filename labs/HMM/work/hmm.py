@@ -62,7 +62,12 @@ class HMM:
         # TODO: compute and return the backward messages beta
         #######################################################
 
-
+        for t in range(L, 0, -1):
+            if t == L - 1:
+                beta[:t] = 1
+            else:
+                for s in range(S):
+                    beta[s][t] = np.sum(np.dot(self.A[s:] * self.B[:t + 1]) * beta[:t + 1])
 
         return beta
 
