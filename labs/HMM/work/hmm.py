@@ -67,7 +67,8 @@ class HMM:
                 beta[:t] = 1
             else:
                 for s in range(S):
-                    beta[s][t] = np.sum(np.dot(self.A[s:] * self.B[:t + 1]) * beta[:t + 1])
+                    beta[s][t] = np.sum(
+                        np.dot(self.A[s:] * self.B[:t + 1]) * beta[:t + 1])  # TODO: self.B[s_][Osequence[t+1]]?
 
         return beta
 
@@ -120,6 +121,14 @@ class HMM:
         #####################################################################
         # TODO: compute and return prob using the forward/backward messages
         #####################################################################
+        alpha = self.forward(Osequence)
+        beta = self.backward(Osequence)
+
+        for t in range(L - 1):
+            for s in range(S):
+                for s_ in range(S):
+                    prob[s][s_][t] = alpha[s][t] * self.A[s][s_] * self.B[s_][t + 1] * beta[s_][
+                        t + 1]  # TODO: self.B[s_][Osequence[t+1]]?
 
     def viterbi(self, Osequence):
         """
