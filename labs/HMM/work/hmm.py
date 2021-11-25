@@ -79,10 +79,6 @@ class HMM:
         Returns:
         - prob: A float number of P(X_{1:T}=x_{1:T})
         """
-        S = len(self.pi)
-        L = len(Osequence)
-        O = self.find_item(Osequence)
-        prob = np.zeros([S, L])
         #####################################################
         # TODO: compute and return prob = P(X_{1:T}=x_{1:T})
         #   using the forward/backward messages
@@ -90,15 +86,7 @@ class HMM:
         alpha = self.forward(Osequence)
         beta = self.backward(Osequence)
 
-        for t in range(L):
-            for s in range(S):
-                if t == L - 1:
-                    beta[:t] = 1
-                elif t == 0:
-                    prob[t] = np.sum(self.A[:0]self.backward(Osequence[1:]))
-                else:
-
-        return prob
+        return np.dot(alpha[:0].T, beta[:0])
 
     def posterior_prob(self, Osequence):
         """
