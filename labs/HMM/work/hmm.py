@@ -103,7 +103,7 @@ class HMM:
         alpha = self.forward(Osequence)
         beta = self.backward(Osequence)
 
-        return alpha*beta
+        return alpha * beta
 
     def likelihood_prob(self, Osequence):
         """
