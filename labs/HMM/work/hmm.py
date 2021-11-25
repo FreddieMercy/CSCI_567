@@ -38,14 +38,12 @@ class HMM:
 
         for i in range(L):
             if i == 0:
-                alpha[:0] = (self.pi*self.B[:0].T).T
+                alpha[:0] = (self.pi * self.B[:0].T).T
             else:
                 for s in range(S):
-                    alpha[s][i] = self.B[s][i]*np.sum(alpha[:i-1]*self.A[:s])
+                    alpha[s][i] = self.B[s][i] * np.sum(alpha[:i - 1] * self.A[:s])
 
         return alpha
-
-        
 
     def backward(self, Osequence):
         """
@@ -64,7 +62,6 @@ class HMM:
         # TODO: compute and return the backward messages beta
         #######################################################
 
-
     def sequence_prob(self, Osequence):
         """
         Inputs:
@@ -73,12 +70,11 @@ class HMM:
         Returns:
         - prob: A float number of P(X_{1:T}=x_{1:T})
         """
-        
+
         #####################################################
         # TODO: compute and return prob = P(X_{1:T}=x_{1:T})
         #   using the forward/backward messages
         #####################################################
-
 
     def posterior_prob(self, Osequence):
         """
@@ -93,8 +89,6 @@ class HMM:
         # TODO: compute and return gamma using the forward/backward messages
         ######################################################################
 
-
-    
     def likelihood_prob(self, Osequence):
         """
         Inputs:
@@ -111,7 +105,6 @@ class HMM:
         # TODO: compute and return prob using the forward/backward messages
         #####################################################################
 
-
     def viterbi(self, Osequence):
         """
         Inputs:
@@ -125,11 +118,10 @@ class HMM:
         ################################################################################
         # TODO: implement the Viterbi algorithm and return the most likely state path
         ################################################################################
-        
+
         return path
 
-
-    #DO NOT MODIFY CODE BELOW
+    # DO NOT MODIFY CODE BELOW
     def find_key(self, obs_dict, idx):
         for item in obs_dict:
             if obs_dict[item] == idx:
