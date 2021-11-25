@@ -36,6 +36,14 @@ class HMM:
         # TODO: compute and return the forward messages alpha
         ######################################################
 
+        for i in range(L):
+            if i == 0:
+                alpha[:0] = (self.pi*self.B[:0].T).T
+            else:
+                for s in range(S):
+                    alpha[s][i] = self.B[s][i]*np.sum(alpha[:i-1]*self.A[:s])
+
+        return alpha
 
         
 
