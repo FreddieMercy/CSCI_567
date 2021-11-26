@@ -38,7 +38,7 @@ class HMM:
 
         for t in range(L):
             if t == 0:
-                alpha[:, 0] = (self.pi * self.B[:, 0].T).T
+                alpha[:, t] = (self.pi * self.B[:, O[t]].T).T
             else:
                 alpha[:, t] = self.B[:, O[t]] * np.dot(alpha[:, t - 1].T, self.A).T
 
