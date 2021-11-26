@@ -160,7 +160,9 @@ class HMM:
             else:
                 path[T] = np.argmax(self.A[:, int(path[T + 1])] * viter[:, T])
                 path[T + 1] = self.find_key(self.state_dict, int(path[T + 1]))
-        path[0] = self.find_key(self.state_dict, int(path[0]))
+
+        if len(path) > 0:
+            path[0] = self.find_key(self.state_dict, int(path[0]))
         return path
 
     # DO NOT MODIFY CODE BELOW
