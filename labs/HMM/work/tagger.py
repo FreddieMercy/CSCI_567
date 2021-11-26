@@ -80,6 +80,8 @@ def sentence_tagging(test_data, model, tags):
     #    accordingly with value 1e-6.
     ######################################################################
 
+    tagging = model.viterbi(test_data)
+
     return tagging
 
 
