@@ -4,21 +4,6 @@ import numpy as np
 
 
 class TestUtilities(TestCase):
-    def legacy_minkowski_distance(self, point1, point2):
-        sum = 0
-        for i in range(len(point1)):
-            tmp = abs(point1[i] - point2[i])
-            tmp **= 3
-            sum += tmp
-        return np.cbrt(sum)
-
-    def legacy_euclidean_distance(self, point1, point2):
-        sum = 0
-        for i in range(len(point1)):
-            tmp = point1[i] - point2[i]
-            tmp **= 2
-            sum += tmp
-        return np.sqrt(sum)
 
     def AssertLists(self, left, right):
         self.assertIsNotNone(left)
@@ -27,6 +12,11 @@ class TestUtilities(TestCase):
 
         for i in range(len(left)):
             self.assertEqual(right[i], left[i])
+
+    def AssertMatrices(self, left, right):
+
+        for i in range(len(left)):
+            self.AssertLists(right[i], left[i])
 
 
 class test_KNN_Tests(TestUtilities):
@@ -45,3 +35,4 @@ class test_KNN_Tests(TestUtilities):
             np.array([57.0, 1.0, 4.0, 140.0, 192.0, 0.0, 0.0, 148.0, 0.0, 0.4, 2.0, 0.0, 6.0, 0])])
 
         print(alpha[:, 0])
+        self.AssertMatrices(alpha * alpha, np.square(alpha))
