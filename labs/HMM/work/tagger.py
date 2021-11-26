@@ -1,6 +1,7 @@
 import numpy as np
 from hmm import HMM
 
+
 def model_training(train_data, tags):
     """
     Train an HMM based on training data
@@ -17,7 +18,7 @@ def model_training(train_data, tags):
 
     # unique_words.keys() contains all unique words
     unique_words = get_unique_words(train_data)
-    
+
     word2idx = {}
     tag2idx = dict()
     S = len(tags)
@@ -28,8 +29,6 @@ def model_training(train_data, tags):
     # The order you index the word/tag does not matter, 
     # as long as the indices are 0, 1, 2, ...
     ###################################################
-    
-
 
     pi = np.zeros(S)
     A = np.zeros((S, S))
@@ -40,7 +39,6 @@ def model_training(train_data, tags):
     #   "divided by zero" is encountered, set the entry 
     #   to be zero.
     ###################################################
-    
 
     # DO NOT MODIFY BELOW
     model = HMM(pi, A, B, word2idx, tag2idx)
@@ -67,9 +65,9 @@ def sentence_tagging(test_data, model, tags):
 
     return tagging
 
+
 # DO NOT MODIFY BELOW
 def get_unique_words(data):
-
     unique_words = {}
 
     for line in data:
