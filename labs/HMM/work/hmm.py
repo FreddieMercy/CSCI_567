@@ -128,6 +128,8 @@ class HMM:
                     prob[s][s_][t] = alpha[s][t] * self.A[s][s_] * self.B[s_][O[t + 1]] * beta[s_][
                         t + 1]
 
+        return prob / self.sequence_prob(Osequence)
+
     def viterbi(self, Osequence):
         """
         Inputs:
