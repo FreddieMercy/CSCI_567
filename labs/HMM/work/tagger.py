@@ -46,16 +46,27 @@ def model_training(train_data, tags):
     #   to be zero.
     ###################################################
 
+    total_A = 0
+    total_B = 0
+    total_pi = 0
+
     for i in train_data:
         pi[tag2idx[i.tags[0]]] += 1
-        if i != S - 1:
-            A[i][i + 1] += 1
-        B[i][unique_words[i]] += 1
+        total_pi+=1
+        B[tag2idx[i.tags[0]]][word2idx[i.words[0]]] += 1
+        total_B+=1
+        for j in range(1, len(i.tags)):
+            A[tag2idx[i.tags[j-1]]][tag2idx[i.tags[j]]] += 1
+            total_A+=1
+            B[tag2idx[i.tags[j]]][word2idx[i.words[j]]] += 1
+            total_B+=1
 
-    # TODO: if "divided by zero" is encountered, set the entry to be zero.
-
-    A /= S
-    B /= S # TODO: really??
+    if total_pi != 0:
+        pi /= total_pi
+    if total_A != 0:
+        A /= total_A
+    if total_B != 0:
+        B /= total_B
 
     # DO NOT MODIFY BELOW
     model = HMM(pi, A, B, word2idx, tag2idx)
