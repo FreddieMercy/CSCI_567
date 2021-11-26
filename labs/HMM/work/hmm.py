@@ -41,7 +41,7 @@ class HMM:
                 alpha[:, 0] = (self.pi * self.B[:, 0].T).T
             else:
                 for s in range(S):
-                    alpha[s][t] = self.B[s][t] * np.sum(alpha[:, t - 1] * self.A[:, s])
+                    alpha[s][t] = self.B[s][O[t]] * np.sum(alpha[:, t - 1] * self.A[:, s])
 
         return alpha
 
@@ -64,11 +64,11 @@ class HMM:
 
         for t in range(L - 1, -1, -1):
             if t == L - 1:
-                beta[:t] = 1
+                beta[:, t] = 1
             else:
                 for s in range(S):
                     beta[s][t] = np.sum(
-                        np.dot(self.A[s:] * self.B[:t + 1]) * beta[:t + 1])  # TODO: self.B[s_][Osequence[t+1]]?
+                        np.dot(self.A[s, :] * self.B[:, O[t + 1]]) * beta[:, t + 1])
 
         return beta
 
@@ -87,7 +87,7 @@ class HMM:
         alpha = self.forward(Osequence)
         beta = self.backward(Osequence)
 
-        return np.dot(alpha[:0].T, beta[:0])
+        return np.dot(alpha[:, 0].T, beta[:, 0])
 
     def posterior_prob(self, Osequence):
         """
@@ -117,6 +117,7 @@ class HMM:
         """
         S = len(self.pi)
         L = len(Osequence)
+        O = self.find_item(Osequence)
         prob = np.zeros([S, S, L - 1])
         #####################################################################
         # TODO: compute and return prob using the forward/backward messages
@@ -127,8 +128,8 @@ class HMM:
         for t in range(L - 1):
             for s in range(S):
                 for s_ in range(S):
-                    prob[s][s_][t] = alpha[s][t] * self.A[s][s_] * self.B[s_][t + 1] * beta[s_][
-                        t + 1]  # TODO: self.B[s_][Osequence[t+1]]?
+                    prob[s][s_][t] = alpha[s][t] * self.A[s][s_] * self.B[s_][O[t + 1]] * beta[s_][
+                        t + 1]
 
     def viterbi(self, Osequence):
         """
@@ -141,6 +142,7 @@ class HMM:
         """
         S = len(self.pi)
         L = len(Osequence)
+        O = self.find_item(Osequence)
         path = []
         ################################################################################
         # TODO: implement the Viterbi algorithm and return the most likely state path
@@ -151,15 +153,15 @@ class HMM:
         for t in range(L):
             for s in range(S):
                 if t == 0:
-                    viter[s][t] = self.pi[s] * self.B[s][t]  # TODO: self.B[s_][Osequence[t]]?
+                    viter[s][t] = self.pi[s] * self.B[s][O[t]]
                 else:
-                    viter[s][t] = self.B[s][t] * np.max(self.A[:s] * viter[:t - 1])
+                    viter[s][t] = self.B[s][O[t]] * np.max(self.A[:, s] * viter[:, t - 1])
 
         for T in range(L - 1, -1, -1):
             if T == L - 1:
-                path[T] = np.argmax(viter[:T])
+                path[T] = np.argmax(viter[:, T])
             else:
-                path[T] = np.argmax(self.A[:path[T + 1]] * viter[:T])
+                path[T] = np.argmax(self.A[:, path[T + 1]] * viter[:, T])
 
         return path
 
