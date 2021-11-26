@@ -92,6 +92,8 @@ def sentence_tagging(test_data, model, tags):
     #    accordingly with value 1e-6.
     ######################################################################
 
+    #model = model_training(test_data, tags)
+
     for i in test_data:
         for item in i.words - model.obs_dict.keys():
             model.obs_dict[item] = len(model.obs_dict)
