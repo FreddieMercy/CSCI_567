@@ -172,9 +172,5 @@ class HMM:
     def find_item(self, Osequence):
         O = []
         for item in Osequence:
-            if item not in self.obs_dict.keys():
-                self.obs_dict[item] = len(self.obs_dict)
-                self.B = np.append(self.B,np.zeros(len(self.B)).reshape(-1, 1), axis=1)
-                self.B[:, self.obs_dict[item]] = 1e-6
             O.append(self.obs_dict[item])
         return O

@@ -92,6 +92,10 @@ def sentence_tagging(test_data, model, tags):
     ######################################################################
 
     for i in test_data:
+        for item in i.words - model.obs_dict.keys():
+            model.obs_dict[item] = len(model.obs_dict)
+            model.B = np.append(model.B, np.zeros(len(tags)).reshape(-1, 1), axis=1)
+            model.B[:, model.obs_dict[item]] = 1e-6
         tagging.append(model.viterbi(i.words))
 
     return tagging
