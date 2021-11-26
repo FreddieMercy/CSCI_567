@@ -62,7 +62,7 @@ class HMM:
         # TODO: compute and return the backward messages beta
         #######################################################
 
-        for t in range(L, 0, -1):
+        for t in range(L - 1, -1, -1):
             if t == L - 1:
                 beta[:t] = 1
             else:
@@ -139,10 +139,27 @@ class HMM:
         - path: A List of the most likely hidden states (return actual states instead of their indices;
                     you might find the given function self.find_key useful)
         """
+        S = len(self.pi)
+        L = len(Osequence)
         path = []
         ################################################################################
         # TODO: implement the Viterbi algorithm and return the most likely state path
         ################################################################################
+
+        viter = np.array([np.zeros(L) for i in range(S)])
+
+        for t in range(L):
+            for s in range(S):
+                if t == 0:
+                    viter[s][t] = self.pi[s] * self.B[s][t]  # TODO: self.B[s_][Osequence[t]]?
+                else:
+                    viter[s][t] = self.B[s][t] * np.max(self.A[:s] * viter[:t - 1])
+
+        for T in range(L - 1, -1, -1):
+            if T == L - 1:
+                path[T] = np.argmax(viter[:T])
+            else:
+                path[T] = np.argmax(self.A[:path[T + 1]] * viter[:T])
 
         return path
 
