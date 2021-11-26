@@ -40,8 +40,7 @@ class HMM:
             if t == 0:
                 alpha[:, 0] = (self.pi * self.B[:, 0].T).T
             else:
-                for s in range(S):
-                    alpha[s][t] = self.B[s][O[t]] * np.sum(alpha[:, t - 1] * self.A[:, s])
+                alpha[:, t] = self.B[:, O[t]] * np.dot(alpha[:, t - 1].T, self.A).T
 
         return alpha
 
