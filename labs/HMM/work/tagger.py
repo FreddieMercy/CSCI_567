@@ -31,10 +31,10 @@ def model_training(train_data, tags):
     ###################################################
 
     for i in range(len(unique_words)):
-        word2idx[i] = unique_words[i]
+        word2idx[unique_words[i]] = i
 
     for i in range(S):
-        tag2idx[i] = tags[i]
+        tag2idx[tags[i]] = i
 
     pi = np.zeros(S)
     A = np.zeros((S, S))
