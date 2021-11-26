@@ -52,14 +52,14 @@ def model_training(train_data, tags):
 
     for i in train_data:
         pi[tag2idx[i.tags[0]]] += 1
-        total_pi+=1
+        total_pi += 1
         B[tag2idx[i.tags[0]]][word2idx[i.words[0]]] += 1
-        total_B+=1
+        total_B += 1
         for j in range(1, len(i.tags)):
-            A[tag2idx[i.tags[j-1]]][tag2idx[i.tags[j]]] += 1
-            total_A+=1
+            A[tag2idx[i.tags[j - 1]]][tag2idx[i.tags[j]]] += 1
+            total_A += 1
             B[tag2idx[i.tags[j]]][word2idx[i.words[j]]] += 1
-            total_B+=1
+            total_B += 1
 
     if total_pi != 0:
         pi /= total_pi
