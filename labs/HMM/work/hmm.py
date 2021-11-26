@@ -124,9 +124,7 @@ class HMM:
 
         for t in range(L - 1):
             for s in range(S):
-                for s_ in range(S):
-                    prob[s][s_][t] = alpha[s][t] * self.A[s][s_] * self.B[s_][O[t + 1]] * beta[s_][
-                        t + 1]
+                prob[s, :, t] = alpha[s][t] * self.A[s, :] * self.B[:, O[t + 1]] * beta[:, t + 1]
 
         return prob / self.sequence_prob(Osequence)
 
