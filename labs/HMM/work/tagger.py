@@ -30,8 +30,8 @@ def model_training(train_data, tags):
     # as long as the indices are 0, 1, 2, ...
     ###################################################
 
-    for i in range(len(unique_words)):
-        word2idx[unique_words[i]] = i
+    for k in unique_words.keys():
+        word2idx[k] = len(word2idx)
 
     for i in range(S):
         tag2idx[tags[i]] = i
