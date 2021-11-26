@@ -1,5 +1,5 @@
 from __future__ import print_function
-import json
+
 import numpy as np
 
 
@@ -65,8 +65,7 @@ class HMM:
             if t == L - 1:
                 beta[:, t] = 1
             else:
-                for s in range(S):
-                    beta[s][t] = np.sum(self.A[s, :] * self.B[:, O[t + 1]] * beta[:, t + 1])
+                beta[:, t] = np.sum(self.B[:, O[t + 1]] * beta[:, t + 1] * self.A, axis=1)
 
         return beta
 
