@@ -46,8 +46,8 @@ def model_training(train_data, tags):
     #   to be zero.
     ###################################################
 
-    for i in range(S):
-        pi[i] = len(tags == i) / S
+    for i in train_data:
+        pi[tag2idx[i.tags[0]]] += 1
         if i != S - 1:
             A[i][i + 1] += 1
         B[i][unique_words[i]] += 1
