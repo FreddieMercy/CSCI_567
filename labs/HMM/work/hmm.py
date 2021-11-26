@@ -140,7 +140,7 @@ class HMM:
         S = len(self.pi)
         L = len(Osequence)
         O = self.find_item(Osequence)
-        path = []
+        path = np.zeros(L)
         ################################################################################
         # TODO: implement the Viterbi algorithm and return the most likely state path
         ################################################################################
@@ -158,8 +158,9 @@ class HMM:
             if T == L - 1:
                 path[T] = np.argmax(viter[:, T])
             else:
-                path[T] = np.argmax(self.A[:, path[T + 1]] * viter[:, T])
-
+                path[T] = np.argmax(self.A[:, int(path[T + 1])] * viter[:, T])
+                path[T + 1] = self.find_key(self.state_dict, int(path[T + 1]))
+        path[0] = self.find_key(self.state_dict, int(path[0]))
         return path
 
     # DO NOT MODIFY CODE BELOW
