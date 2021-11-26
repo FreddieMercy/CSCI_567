@@ -146,7 +146,7 @@ class HMM:
         # TODO: implement the Viterbi algorithm and return the most likely state path
         ################################################################################
 
-        viter = np.array([np.zeros(L) for i in range(S)])
+        viter = np.zeros((S, L))
 
         for t in range(L):
             for s in range(S):

@@ -30,6 +30,12 @@ def model_training(train_data, tags):
     # as long as the indices are 0, 1, 2, ...
     ###################################################
 
+    for i in range(len(unique_words)):
+        word2idx[i] = unique_words[i]
+
+    for i in range(S):
+        tag2idx[i] = tags[i]
+
     pi = np.zeros(S)
     A = np.zeros((S, S))
     B = np.zeros((S, len(unique_words)))
@@ -39,6 +45,17 @@ def model_training(train_data, tags):
     #   "divided by zero" is encountered, set the entry 
     #   to be zero.
     ###################################################
+
+    for i in range(S):
+        pi[i] = len(tags == i) / S
+        if i != S - 1:
+            A[i][i + 1] += 1
+        B[i][unique_words[i]] += 1
+
+    # TODO: if "divided by zero" is encountered, set the entry to be zero.
+
+    A /= S
+    B /= S # TODO: really??
 
     # DO NOT MODIFY BELOW
     model = HMM(pi, A, B, word2idx, tag2idx)
