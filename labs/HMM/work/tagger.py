@@ -91,7 +91,8 @@ def sentence_tagging(test_data, model, tags):
     #    accordingly with value 1e-6.
     ######################################################################
 
-    tagging = model.viterbi(test_data)
+    for i in test_data:
+        tagging.append(model.viterbi(i.words))
 
     return tagging
 
