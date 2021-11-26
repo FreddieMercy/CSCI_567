@@ -67,8 +67,7 @@ class HMM:
                 beta[:, t] = 1
             else:
                 for s in range(S):
-                    beta[s][t] = np.sum(
-                        np.dot(self.A[s, :] * self.B[:, O[t + 1]]) * beta[:, t + 1])
+                    beta[s][t] = np.sum(self.A[s, :] * self.B[:, O[t + 1]] * beta[:, t + 1])
 
         return beta
 
