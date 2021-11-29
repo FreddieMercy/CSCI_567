@@ -46,27 +46,25 @@ def model_training(train_data, tags):
     #   to be zero.
     ###################################################
 
-    total_A = 0
-    total_B = 0
-    total_pi = 0
-
     for i in train_data:
         pi[tag2idx[i.tags[0]]] += 1
-        total_pi += 1
         B[tag2idx[i.tags[0]]][word2idx[i.words[0]]] += 1
-        total_B += 1
         for j in range(1, len(i.tags)):
             A[tag2idx[i.tags[j - 1]]][tag2idx[i.tags[j]]] += 1
-            total_A += 1
             B[tag2idx[i.tags[j]]][word2idx[i.words[j]]] += 1
-            total_B += 1
 
+    total_pi = np.sum(pi)
     if total_pi != 0:
         pi /= total_pi
-    if total_A != 0:
-        A /= total_A
-    if total_B != 0:
-        B /= total_B
+
+    total_A = np.sum(A, axis=1)
+    total_B = np.sum(B, axis=1)
+
+    for i in range(S):
+        if total_A[i] != 0:
+            A[i] /= total_A[i]
+        if total_B[i] != 0:
+            B[i] /= total_B[i]
 
     # DO NOT MODIFY BELOW
     model = HMM(pi, A, B, word2idx, tag2idx)
@@ -84,7 +82,8 @@ def sentence_tagging(test_data, model, tags):
     - tagging: (num_sentence*num_tagging) a 2D list of output tagging for each sentences on test_data
     """
     tagging = []
-    S = len(model.B)
+    S = len(tags)
+    E6 = 1e-6
     ######################################################################
     # TODO: for each sentence, find its tagging using Viterbi algorithm.
     #    Note that when encountering an unseen word not in the HMM model,
@@ -97,8 +96,9 @@ def sentence_tagging(test_data, model, tags):
     for i in test_data:
         for item in i.words - model.obs_dict.keys():
             model.obs_dict[item] = len(model.obs_dict)
-            model.B = np.append(model.B, np.zeros(S).reshape(-1, 1), axis=1)
-            model.B[:, model.obs_dict[item]] = 1e-6
+            newValue = np.zeros(S)
+            newValue[:] = E6
+            model.B = np.append(model.B, newValue.reshape(-1, 1), axis=1)
         tagging.append(model.viterbi(i.words))
 
     return tagging
